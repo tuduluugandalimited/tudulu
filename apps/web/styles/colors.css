@@ -1,0 +1,78 @@
+/* D:\tudulu\apps\web\styles\colors.css */
+:root {
+  /* Core Brand Identity Tokens */
+  --td-color-primary: #15803d; /* African Green */
+  --td-color-primary-hover: #166534; /* Dark Green */
+  --td-color-primary-light: #dcfce7; /* Light Green Tint */
+
+  --td-color-gold: #d97706; /* Opportunity Gold */
+  --td-color-gold-hover: #b45309; /* Deep Gold */
+  --td-color-gold-light: #fef3c7; /* Soft Gold Tint */
+
+  --td-color-accent: #f59e0b; /* Warm Highlight Accent */
+
+  /* Surface & Background Rhythm */
+  --td-bg: #ffffff;
+  --td-bg-soft: #f8fafc; /* Very light slate canvas */
+  --td-bg-surface: #ffffff;
+  --td-bg-surface-elevated: #f1f5f9;
+  --td-bg-surface-hover: #e2e8f0;
+
+  --td-bg-section-green: #f0fdf4; /* Funding / High Impact Sections */
+  --td-bg-section-gold: #fffbeb; /* Jobs / High Priority Callouts */
+  --td-bg-dark: #020617; /* Deep Slate (Newsletter / CTA) */
+
+  /* Text & Content */
+  --td-text: #0f172a;
+  --td-text-light: #475569;
+  --td-text-muted: #64748b;
+  --td-text-inverse: #ffffff;
+
+  /* Category Badges & Sector Colors */
+  --td-sector-health: #15803d; /* Green */
+  --td-sector-funding: #d97706; /* Gold */
+  --td-sector-climate: #059669; /* Emerald */
+  --td-sector-technology: #334155; /* Slate */
+  --td-sector-education: #166534; /* Forest Green */
+  --td-sector-agriculture: #b45309; /* Deep Gold/Amber */
+
+  /* Expressive Status & Input Tokens */
+  --td-status-error: #dc2626;
+  --td-status-warning: #d97706;
+  --td-status-success: #15803d;
+
+  --td-border-subtle: #e2e8f0;
+  --td-border-strong: #cbd5e1;
+
+  /* Skeletons */
+  --td-skeleton: #f1f5f9;
+  --td-skeleton-highlight: #e2e8f0;
+}
+
+/* Dark Mode Overrides */
+.dark,
+[data-theme="dark"] {
+  --td-bg: #020617;
+  --td-bg-soft: #0f172a;
+  --td-bg-surface: #0f172a;
+  --td-bg-surface-elevated: #1e293b;
+  --td-bg-surface-hover: #334155;
+
+  --td-bg-section-green: rgba(21, 128, 61, 0.12);
+  --td-bg-section-gold: rgba(217, 119, 6, 0.12);
+  --td-bg-dark: #020617;
+
+  --td-text: #f8fafc;
+  --td-text-light: #94a3b8;
+  --td-text-muted: #64748b;
+  --td-text-inverse: #020617;
+
+  --td-border-subtle: #1e293b;
+  --td-border-strong: #334155;
+
+  --td-color-primary-light: rgba(21, 128, 61, 0.2);
+  --td-color-gold-light: rgba(217, 119, 6, 0.2);
+
+  --td-skeleton: #1e293b;
+  --td-skeleton-highlight: #334155;
+}

@@ -1,0 +1,165 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Global Taxonomy Enums
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  EDITOR
+  JOURNALIST
+  NGO_MANAGER
+  ORGANIZATION_STAFF
+  VOLUNTEER
+  EMPLOYER
+  REGISTERED_USER
+  GUEST
+}
+
+enum OpportunityType {
+  JOB
+  GRANT
+  SCHOLARSHIP
+  VOLUNTEER
+  TENDER
+}
+
+enum EntityType {
+  LOCAL_NGO
+  INTL_NGO
+  FOUNDATION
+  UN_AGENCY
+  GOVERNMENT
+  CBO
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  passwordHash  String
+  fullName      String
+  role          Role            @default(REGISTERED_USER)
+  avatarUrl     String?
+  bio           String?
+  
+  // Relations
+  organizationId String?
+  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  bookmarks      Bookmark[]
+  notifications  Notification[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Organization {
+  id              String         @id @default(uuid())
+  name            String
+  slug            String         @unique
+  type            EntityType
+  logoUrl         String?
+  isVerified      Boolean        @default(false)
+  registrationNo  String?
+  description     String         @db.Text
+  website         String?
+  
+  // Location
+  countryCode     String         // e.g. "UG", "KE"
+  region          String?
+  
+  // Relations
+  members         User[]
+  opportunities   Opportunity[]
+  projects        Project[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model Opportunity {
+  id              String          @id @default(uuid())
+  title           String
+  slug            String          @unique
+  type            OpportunityType
+  summary         String          @db.Text
+  description     String          @db.Text
+  location        String
+  deadline        DateTime?
+  amountUSD       Decimal?        // For Grants/Funding
+  
+  // Relations
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id])
+  categoryId      String
+  category        Category        @relation(fields: [categoryId], references: [id])
+  tags            Tag[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model Article {
+  id              String    @id @default(uuid())
+  title           String
+  slug            String    @unique
+  content         String    @db.Text
+  aiSummary       String?   @db.Text
+  featuredImage   String?
+  publishedAt     DateTime?
+  isTrending      Boolean   @default(false)
+  
+  // Metadata
+  countryCode     String?   // ISO code for filtering
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id])
+  tags            Tag[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Category {
+  id            String        @id @default(uuid())
+  name          String        @unique // Health, Sports, Climate, etc.
+  slug          String        @unique
+  articles      Article[]
+  opportunities Opportunity[]
+}
+
+model Tag {
+  id            String        @id @default(uuid())
+  name          String        @unique
+  articles      Article[]
+  opportunities Opportunity[]
+}
+
+model Bookmark {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entityId  String   // Generic UUID for Article, Opportunity, or Org
+  entityType String  // "ARTICLE" | "OPPORTUNITY" | "ORG"
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Project {
+  id             String       @id @default(uuid())
+  title          String
+  description    String       @db.Text
+  latitude       Float?
+  longitude      Float?
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  createdAt      DateTime     @default(now())
+}
