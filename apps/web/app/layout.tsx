@@ -10,7 +10,7 @@ const SITE_CONFIG = {
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
-  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-XXXXXXX", // 👈 Replace with your GTM ID
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-MCL2JTZC", // 👈 Replace with your GTM ID
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
