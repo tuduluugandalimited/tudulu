@@ -10,7 +10,8 @@ const SITE_CONFIG = {
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
-  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-MCL2JTZC", // 👈 Replace with your GTM ID
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-MCL2JTZC",
+  gaId: process.env.NEXT_PUBLIC_GA_ID || "G-6CH31J565R",
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
@@ -78,7 +79,30 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* 1. Google Tag Manager Head Script */}
+        {/* Google Analytics 4 (gtag.js) */}
+        {SITE_CONFIG.gaId && (
+          <>
+            <Script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script
+              id="google-analytics"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${SITE_CONFIG.gaId}');
+                `,
+              }}
+            />
+          </>
+        )}
+
+        {/* Google Tag Manager Head Script */}
         {SITE_CONFIG.gtmId && (
           <Script
             id="google-tag-manager"
@@ -106,7 +130,7 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-screen bg-[var(--td-bg)] text-[var(--td-text)] flex flex-col font-sans antialiased selection:bg-[#15803D] selection:text-white">
-        {/* 2. Google Tag Manager (noscript fallback) */}
+        {/* Google Tag Manager (noscript fallback) */}
         {SITE_CONFIG.gtmId && (
           <noscript>
             <iframe
@@ -118,13 +142,8 @@ export default function RootLayout({
           </noscript>
         )}
 
-        {/* Navigation Bar */}
         <Navbar />
-
-        {/* Core Main Content */}
         <main className="flex-grow">{children}</main>
-
-        {/* Global Footer */}
         <Footer />
       </body>
     </html>
