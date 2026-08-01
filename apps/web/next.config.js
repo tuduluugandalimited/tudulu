@@ -1,13 +1,12 @@
+const path = require("path");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+  // Fixes Turbopack path-doubling issue in Vercel monorepos
+  outputFileTracingRoot: path.join(__dirname, "../../"),
+  typescript: {
+    // Already verified locally via `npm run build`
+    ignoreBuildErrors: false,
   },
 };
 
