@@ -1,11 +1,11 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import Script from "next/script";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-// Central config fallback if SITE_CONFIG is imported from a constant file
+// Central config fallback
 const SITE_CONFIG = {
   name: "Tudulu",
   fullName: "Tudulu Uganda Limited",
@@ -98,27 +98,10 @@ export default function RootLayout({
 
         {/* Global Footer */}
         <Footer />
-
-        {/* Google Analytics Script & Initialization */}
-        {SITE_CONFIG.gaId && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.gaId}`}
-              strategy="afterInteractive"
-            />
-            <Script id="google-analytics" strategy="afterInteractive">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${SITE_CONFIG.gaId}', {
-                  page_path: window.location.pathname,
-                });
-              `}
-            </Script>
-          </>
-        )}
       </body>
+
+      {/* Optimized Google Analytics via @next/third-parties */}
+      {SITE_CONFIG.gaId && <GoogleAnalytics gaId={SITE_CONFIG.gaId} />}
     </html>
   );
 }
