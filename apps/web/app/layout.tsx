@@ -98,10 +98,10 @@ export default function RootLayout({
 
         {/* Global Footer */}
         <Footer />
-      </body>
 
-      {/* Optimized Google Analytics via @next/third-parties */}
-      {SITE_CONFIG.gaId && <GoogleAnalytics gaId={SITE_CONFIG.gaId} />}
+        {/* Optimized Google Analytics via @next/third-parties (Placed inside <body>) */}
+        {SITE_CONFIG.gaId && <GoogleAnalytics gaId={SITE_CONFIG.gaId} />}
+      </body>
     </html>
   );
 }
