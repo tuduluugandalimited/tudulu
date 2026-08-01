@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { GoogleAnalytics } from "@next/third-parties/google";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -11,7 +10,7 @@ const SITE_CONFIG = {
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
-  gaId: process.env.NEXT_PUBLIC_GA_ID || "G-X8KNVDDC7P",
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-XXXXXXX", // 👈 Replace with your GTM ID
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
@@ -79,6 +78,23 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* 1. Google Tag Manager Head Script */}
+        {SITE_CONFIG.gtmId && (
+          <Script
+            id="google-tag-manager"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${SITE_CONFIG.gtmId}');
+            `,
+            }}
+          />
+        )}
+
         {/* Google AdSense Script Loader */}
         {SITE_CONFIG.adsenseId && (
           <Script
@@ -90,6 +106,18 @@ export default function RootLayout({
         )}
       </head>
       <body className="min-h-screen bg-[var(--td-bg)] text-[var(--td-text)] flex flex-col font-sans antialiased selection:bg-[#15803D] selection:text-white">
+        {/* 2. Google Tag Manager (noscript fallback) */}
+        {SITE_CONFIG.gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${SITE_CONFIG.gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: "none", visibility: "hidden" }}
+            />
+          </noscript>
+        )}
+
         {/* Navigation Bar */}
         <Navbar />
 
@@ -98,9 +126,6 @@ export default function RootLayout({
 
         {/* Global Footer */}
         <Footer />
-
-        {/* Optimized Google Analytics via @next/third-parties (Placed inside <body>) */}
-        {SITE_CONFIG.gaId && <GoogleAnalytics gaId={SITE_CONFIG.gaId} />}
       </body>
     </html>
   );
