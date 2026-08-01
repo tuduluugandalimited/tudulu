@@ -1,7 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/layout/Footer";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Container } from "@/components/ui/Container";
@@ -66,8 +64,6 @@ const impactStats = [
 export default function OrganizationsPage() {
   return (
     <div className="min-h-screen bg-[var(--td-bg-canvas,#F8FAFC)] text-[var(--td-text-primary,#0F172A)] flex flex-col font-sans selection:bg-sky-500 selection:text-white">
-      <Navbar />
-
       <main className="flex-1">
         {/* Hero Section */}
         <Section
@@ -178,8 +174,6 @@ export default function OrganizationsPage() {
           </Container>
         </Section>
       </main>
-
-      <Footer />
     </div>
   );
 }
