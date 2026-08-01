@@ -11,7 +11,7 @@ const SITE_CONFIG = {
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
-  gaId: process.env.NEXT_PUBLIC_GA_ID,
+  gaId: process.env.NEXT_PUBLIC_GA_ID || "G-X8KNVDDC7P",
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
