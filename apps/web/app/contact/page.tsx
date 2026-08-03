@@ -22,13 +22,6 @@ export default function ContactPage() {
         >
           <div className="absolute inset-0 td-glow-hero pointer-events-none" />
           <Container size="md" className="relative z-10 text-center space-y-4">
-            <Badge
-              variant="emerald"
-              className="px-3 py-1 text-xs font-medium rounded-full bg-[var(--td-color-primary-light)] text-[var(--td-color-primary)]"
-            >
-              Get In Touch
-            </Badge>
-
             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
               Contact{" "}
               <span className="td-gradient-text">Tudulu Uganda Limited</span>
