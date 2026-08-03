@@ -1,6 +1,5 @@
 // components/home/FeaturedNews.tsx
 import Link from "next/link";
-import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
 import { newsPosts } from "@/app/data/news";
@@ -45,9 +44,9 @@ export function FeaturedNews() {
               <div className="p-6 space-y-4">
                 <div className="flex items-center justify-between text-xs">
                   <Badge variant="blue">{post.category}</Badge>
-                  <span className="inline-flex items-center gap-1 text-slate-400 font-medium">
-                    <Clock className="w-3 h-3" />
-                    {post.readingTimeMinutes} min read
+                  <span className="inline-flex items-center gap-1 text-slate-400 font-medium shrink-0">
+                    <Clock className="w-3 h-3 shrink-0" />
+                    <span>{post.readingTimeMinutes} min read</span>
                   </span>
                 </div>
 
@@ -61,11 +60,11 @@ export function FeaturedNews() {
               </div>
 
               <div className="px-6 pb-6 pt-2 flex items-center justify-between text-xs text-slate-400 font-medium border-t border-slate-100">
-                <span className="inline-flex items-center gap-1.5 text-slate-600">
-                  <User className="w-3.5 h-3.5 text-slate-400" />
-                  {post.author.name}
+                <span className="inline-flex items-center gap-1.5 text-slate-600 truncate mr-2">
+                  <User className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                  <span className="truncate">{post.author.name}</span>
                 </span>
-                <time>{post.publishedAt}</time>
+                <time className="shrink-0">{post.publishedAt}</time>
               </div>
             </article>
           ))}

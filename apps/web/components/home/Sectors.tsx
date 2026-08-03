@@ -110,19 +110,19 @@ export function Sectors() {
                 className="group relative flex flex-col justify-between p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="p-3 rounded-xl bg-slate-100 text-slate-800 group-hover:bg-sky-50 group-hover:text-sky-600 transition-colors">
-                      <Icon className="w-6 h-6" />
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="p-3 rounded-xl bg-slate-100 text-slate-800 group-hover:bg-sky-50 group-hover:text-sky-600 transition-colors shrink-0">
+                      <Icon className="w-6 h-6 shrink-0" />
                     </div>
                     {sector.badge && (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-700">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 shrink-0">
                         {sector.badge}
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug">
                       {sector.name}
                     </h3>
                     <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
@@ -131,9 +131,9 @@ export function Sectors() {
                   </div>
                 </div>
 
-                <div className="pt-6 flex items-center text-xs font-semibold text-slate-400 group-hover:text-sky-600 transition-colors">
+                <div className="pt-6 mt-4 border-t border-slate-100 flex items-center text-xs font-semibold text-slate-400 group-hover:text-sky-600 transition-colors">
                   <span>Browse sector</span>
-                  <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform shrink-0" />
                 </div>
               </Link>
             );

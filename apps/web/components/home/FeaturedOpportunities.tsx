@@ -91,9 +91,9 @@ export function FeaturedOpportunities() {
                 <div className="flex items-center justify-between">
                   <Badge variant={opp.badgeVariant}>{opp.type}</Badge>
                   {opp.featured && (
-                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200">
-                      <Sparkles className="w-3 h-3" />
-                      Featured
+                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-sky-700 bg-sky-50 px-2 py-0.5 rounded-full border border-sky-200 shrink-0">
+                      <Sparkles className="w-3 h-3 shrink-0" />
+                      <span>Featured</span>
                     </span>
                   )}
                 </div>
@@ -114,13 +114,13 @@ export function FeaturedOpportunities() {
                       {opp.amount}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 truncate">
                     <Target className="w-4 h-4 text-slate-400 shrink-0" />
                     <span className="truncate">{opp.target}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-slate-400 shrink-0" />
-                    <span>
+                    <span className="truncate">
                       Deadline:{" "}
                       <strong className="text-slate-800">{opp.deadline}</strong>
                     </span>
@@ -134,7 +134,7 @@ export function FeaturedOpportunities() {
                   className="w-full inline-flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-slate-900 hover:bg-sky-600 text-white font-semibold text-xs transition-colors"
                 >
                   <span>View Details & Apply</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                 </Link>
               </div>
             </div>

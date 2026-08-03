@@ -27,7 +27,7 @@ export function Newsletter() {
       <Container size="md" className="relative z-10">
         <div className="max-w-2xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-sky-400 text-xs font-semibold uppercase tracking-wider">
-            <Mail className="w-3.5 h-3.5" />
+            <Mail className="w-3.5 h-3.5 shrink-0" />
             <span>Impact Intelligence Weekly</span>
           </div>
 
@@ -76,12 +76,12 @@ export function Newsletter() {
 
           {/* Trust indicators */}
           <div className="pt-2 flex items-center justify-center gap-6 text-xs text-slate-500 font-medium">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-slate-400" />
-              No spam. Unsubscribe anytime.
+            <span className="flex items-center gap-1.5 shrink-0">
+              <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
+              <span>No spam. Unsubscribe anytime.</span>
             </span>
-            <span>•</span>
-            <span>Zero third-party sharing</span>
+            <span className="shrink-0">•</span>
+            <span className="shrink-0">Zero third-party sharing</span>
           </div>
         </div>
       </Container>

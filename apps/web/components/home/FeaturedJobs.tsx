@@ -1,141 +1,173 @@
 // components/home/FeaturedJobs.tsx
+
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { Badge } from "@/components/ui/Badge";
-import {
-  Briefcase,
-  MapPin,
-  Clock,
-  DollarSign,
-  ArrowRight,
-  Building2,
-} from "lucide-react";
+import { ArrowRight, Building2, Clock3, Globe, MapPin } from "lucide-react";
 
 export function FeaturedJobs() {
   const jobs = [
     {
-      id: "job-1",
-      title: "Senior Health Information Systems (HIS) Architect",
-      organization: "Tudulu Health",
-      location: "Kampala, Uganda (Hybrid)",
-      type: "Full-time",
-      salary: "$3,500 - $5,000 / mo",
-      postedAt: "2 days ago",
-      category: "Engineering",
-      slug: "senior-his-architect",
-    },
-    {
-      id: "job-2",
-      title: "Regional Monitoring & Evaluation (M&E) Specialist",
-      organization: "World Vision East Africa",
+      id: "1",
+      title: "Digital Health Program Manager",
+      organization: "PATH",
       location: "Nairobi, Kenya",
       type: "Full-time",
-      salary: "Competitive",
-      postedAt: "3 days ago",
-      category: "Development",
-      slug: "regional-me-specialist",
+      category: "Health",
+      posted: "2 days ago",
+      slug: "digital-health-program-manager",
     },
     {
-      id: "job-3",
-      title: "Edge AI Clinical Decision Support Engineer",
-      organization: "Tudulu Technology",
-      location: "Remote (Africa)",
-      type: "Contract",
-      salary: "$4,000 - $6,000 / mo",
-      postedAt: "1 week ago",
-      category: "AI & Data",
-      slug: "edge-ai-clinical-engineer",
-    },
-    {
-      id: "job-4",
-      title: "Grants & Institutional Partnerships Manager",
-      organization: "BRAC Uganda",
+      id: "2",
+      title: "Monitoring, Evaluation & Learning Specialist",
+      organization: "BRAC International",
       location: "Kampala, Uganda",
       type: "Full-time",
-      salary: "Undisclosed",
-      postedAt: "Just now",
-      category: "Fundraising",
-      slug: "grants-partnerships-manager",
+      category: "Monitoring & Evaluation",
+      posted: "4 days ago",
+      slug: "mel-specialist",
+    },
+    {
+      id: "3",
+      title: "Software Engineer – Humanitarian Technology",
+      organization: "International Rescue Committee",
+      location: "Remote",
+      type: "Remote",
+      category: "Technology",
+      posted: "1 day ago",
+      slug: "software-engineer-humanitarian",
+    },
+    {
+      id: "4",
+      title: "Climate Finance Advisor",
+      organization: "African Development Bank",
+      location: "Abidjan, Côte d'Ivoire",
+      type: "Full-time",
+      category: "Climate",
+      posted: "Today",
+      slug: "climate-finance-advisor",
+    },
+    {
+      id: "5",
+      title: "Biomedical Engineer",
+      organization: "Médecins Sans Frontières",
+      location: "Juba, South Sudan",
+      type: "Contract",
+      category: "Biomedical Engineering",
+      posted: "Yesterday",
+      slug: "biomedical-engineer-msf",
+    },
+    {
+      id: "6",
+      title: "Research Data Scientist",
+      organization: "Africa CDC",
+      location: "Addis Ababa, Ethiopia",
+      type: "Full-time",
+      category: "Research",
+      posted: "3 days ago",
+      slug: "research-data-scientist",
     },
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-slate-50 border-b border-slate-200">
+    <section className="py-24 bg-slate-50 border-y border-slate-200">
       <Container size="lg">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 pb-6 border-b border-slate-200">
-          <div className="max-w-2xl">
-            <p className="text-xs font-semibold text-sky-600 uppercase tracking-widest mb-2">
-              Career Opportunities
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+          <div className="max-w-3xl">
+            <p className="text-sky-600 font-semibold uppercase tracking-[0.2em] text-xs">
+              Careers Across Africa
             </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Featured Careers & Talent
+
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-900">
+              Verified Development & NGO Jobs
             </h2>
-            <p className="text-slate-600 text-base sm:text-lg mt-2">
-              Find impactful roles at leading technology platforms, NGOs, and
-              global development entities.
+
+            <p className="mt-4 text-lg text-slate-600">
+              Discover verified vacancies from NGOs, UN agencies, donors,
+              research institutions, governments, humanitarian organizations and
+              technology companies driving Africa's development.
             </p>
           </div>
+
           <Link
             href="/jobs"
-            className="mt-6 md:mt-0 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-600 hover:text-sky-700 transition-colors group shrink-0"
+            className="inline-flex items-center gap-2 text-sky-600 font-semibold hover:text-sky-700"
           >
-            <span>View all active job listings</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            Browse all vacancies
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {/* Jobs List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {jobs.map((job) => (
-            <div
+            <article
               key={job.id}
-              className="group relative p-6 bg-white rounded-2xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4"
+              className="group bg-white rounded-2xl border border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-sky-600 flex items-center gap-1.5">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400" />
-                    {job.organization}
-                  </span>
+              <div className="p-6">
+                <div className="flex items-center justify-between">
+                  <Badge variant="blue">{job.category}</Badge>
+
                   <Badge variant="neutral">{job.type}</Badge>
                 </div>
 
-                <h3 className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug">
+                <h3 className="mt-5 text-xl font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
                   <Link href={`/jobs/${job.slug}`}>{job.title}</Link>
                 </h3>
 
-                <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs text-slate-500 font-medium">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                    {job.location}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <DollarSign className="w-3.5 h-3.5 text-slate-400" />
-                    {job.salary}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    {job.postedAt}
-                  </span>
+                <div className="mt-5 space-y-3 text-sm text-slate-600">
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-4 h-4 shrink-0" />
+                    <span>{job.organization}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 shrink-0" />
+                    <span>{job.location}</span>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <Clock3 className="w-4 h-4 shrink-0" />
+                    <span>Posted {job.posted}</span>
+                  </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-400 font-medium">
-                  Category:{" "}
-                  <strong className="text-slate-700">{job.category}</strong>
-                </span>
+              <div className="border-t border-slate-100 px-6 py-4">
                 <Link
                   href={`/jobs/${job.slug}`}
-                  className="text-sky-600 font-semibold group-hover:underline flex items-center gap-1"
+                  className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-700"
                 >
-                  Apply Role
-                  <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  View Job
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
-            </div>
+            </article>
           ))}
+        </div>
+
+        <div className="mt-14 rounded-2xl bg-slate-900 p-8 text-center text-white">
+          <Globe className="w-10 h-10 mx-auto text-sky-400 mb-4" />
+
+          <h3 className="text-2xl font-bold">
+            Thousands of African Development Careers
+          </h3>
+
+          <p className="mt-3 max-w-2xl mx-auto text-slate-300">
+            Search opportunities from NGOs, UN agencies, multilateral banks,
+            humanitarian organizations, universities, foundations, governments,
+            social enterprises and private sector partners across all African
+            regions.
+          </p>
+
+          <Link
+            href="/jobs"
+            className="inline-flex mt-6 items-center gap-2 rounded-xl bg-sky-500 px-6 py-3 font-semibold text-slate-950 hover:bg-sky-400 transition"
+          >
+            Explore Jobs
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </Container>
     </section>

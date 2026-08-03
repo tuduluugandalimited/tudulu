@@ -58,8 +58,8 @@ export function WhyTudulu() {
               >
                 <div className="space-y-4">
                   {/* Icon Container with Green -> Gold Interaction */}
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center text-slate-900 dark:text-slate-100 group-hover:text-amber-600 group-hover:border-green-700/40 td-transition-colors">
-                    <Icon className="w-6 h-6 td-transition-transform group-hover:scale-110" />
+                  <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center text-slate-900 dark:text-slate-100 group-hover:text-amber-600 group-hover:border-green-700/40 td-transition-colors shrink-0">
+                    <Icon className="w-6 h-6 td-transition-transform group-hover:scale-110 shrink-0" />
                   </div>
 
                   {/* Text Content */}
@@ -67,7 +67,7 @@ export function WhyTudulu() {
                     <span className="text-xs font-bold text-green-700 dark:text-green-400 tracking-wider uppercase">
                       {pillar.title}
                     </span>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1 leading-snug">
                       {pillar.subtitle}
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400 text-sm mt-3 leading-relaxed">
