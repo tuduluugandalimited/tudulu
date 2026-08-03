@@ -1,4 +1,4 @@
-// components/home/FeaturedJobs.tsx
+// D:\tudulu\apps\web\components\home\FeaturedJobs.tsx
 
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
@@ -70,20 +70,20 @@ export function FeaturedJobs() {
   ];
 
   return (
-    <section className="py-24 bg-slate-50 border-y border-slate-200">
+    <section className="py-20 sm:py-28 bg-[var(--td-bg)] text-[var(--td-text)] border-y border-[var(--td-border-subtle)]">
       <Container size="lg">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 sm:mb-16 pb-6 border-b border-[var(--td-border-subtle)]">
           <div className="max-w-3xl">
-            <p className="text-sky-600 font-semibold uppercase tracking-[0.2em] text-xs">
+            <p className="text-[var(--td-color-primary)] font-semibold uppercase tracking-[0.2em] text-xs">
               Careers Across Africa
             </p>
 
-            <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-900">
+            <h2 className="mt-3 text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--td-text)]">
               Verified Development & NGO Jobs
             </h2>
 
-            <p className="mt-4 text-lg text-slate-600">
+            <p className="mt-4 text-base sm:text-lg text-[var(--td-text-light)]">
               Discover verified vacancies from NGOs, UN agencies, donors,
               research institutions, governments, humanitarian organizations and
               technology companies driving Africa's development.
@@ -92,9 +92,9 @@ export function FeaturedJobs() {
 
           <Link
             href="/jobs"
-            className="inline-flex items-center gap-2 text-sky-600 font-semibold hover:text-sky-700"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--td-color-primary)] hover:opacity-80 transition-opacity shrink-0"
           >
-            Browse all vacancies
+            <span>Browse all vacancies</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -103,43 +103,42 @@ export function FeaturedJobs() {
           {jobs.map((job) => (
             <article
               key={job.id}
-              className="group bg-white rounded-2xl border border-slate-200 hover:border-sky-300 hover:shadow-lg transition-all"
+              className="group bg-[var(--td-bg-soft)] rounded-[var(--td-radius-lg)] border border-[var(--td-border-subtle)] hover:border-[var(--td-border)] hover:shadow-md transition-all flex flex-col justify-between"
             >
               <div className="p-6">
                 <div className="flex items-center justify-between">
                   <Badge variant="blue">{job.category}</Badge>
-
                   <Badge variant="neutral">{job.type}</Badge>
                 </div>
 
-                <h3 className="mt-5 text-xl font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
+                <h3 className="mt-5 text-xl font-bold text-[var(--td-text)] group-hover:text-[var(--td-color-primary)] transition-colors leading-snug">
                   <Link href={`/jobs/${job.slug}`}>{job.title}</Link>
                 </h3>
 
-                <div className="mt-5 space-y-3 text-sm text-slate-600">
+                <div className="mt-5 space-y-3 text-sm text-[var(--td-text-light)]">
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4 shrink-0" />
+                    <Building2 className="w-4 h-4 text-[var(--td-text-muted)] shrink-0" />
                     <span>{job.organization}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4 shrink-0" />
+                    <MapPin className="w-4 h-4 text-[var(--td-text-muted)] shrink-0" />
                     <span>{job.location}</span>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <Clock3 className="w-4 h-4 shrink-0" />
+                    <Clock3 className="w-4 h-4 text-[var(--td-text-muted)] shrink-0" />
                     <span>Posted {job.posted}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="border-t border-slate-100 px-6 py-4">
+              <div className="border-t border-[var(--td-border-subtle)] px-6 py-4">
                 <Link
                   href={`/jobs/${job.slug}`}
-                  className="inline-flex items-center gap-2 font-semibold text-sky-600 hover:text-sky-700"
+                  className="inline-flex items-center gap-2 font-semibold text-xs text-[var(--td-color-primary)] hover:underline"
                 >
-                  View Job
+                  <span>View Job</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -147,14 +146,14 @@ export function FeaturedJobs() {
           ))}
         </div>
 
-        <div className="mt-14 rounded-2xl bg-slate-900 p-8 text-center text-white">
-          <Globe className="w-10 h-10 mx-auto text-sky-400 mb-4" />
+        <div className="mt-14 rounded-[var(--td-radius-lg)] bg-[var(--td-bg-surface-elevated)] border border-[var(--td-border-subtle)] p-8 text-center text-[var(--td-text)] shadow-sm">
+          <Globe className="w-10 h-10 mx-auto text-[var(--td-color-primary)] mb-4" />
 
-          <h3 className="text-2xl font-bold">
+          <h3 className="text-2xl font-extrabold">
             Thousands of African Development Careers
           </h3>
 
-          <p className="mt-3 max-w-2xl mx-auto text-slate-300">
+          <p className="mt-3 max-w-2xl mx-auto text-sm sm:text-base text-[var(--td-text-light)]">
             Search opportunities from NGOs, UN agencies, multilateral banks,
             humanitarian organizations, universities, foundations, governments,
             social enterprises and private sector partners across all African
@@ -163,9 +162,9 @@ export function FeaturedJobs() {
 
           <Link
             href="/jobs"
-            className="inline-flex mt-6 items-center gap-2 rounded-xl bg-sky-500 px-6 py-3 font-semibold text-slate-950 hover:bg-sky-400 transition"
+            className="inline-flex mt-6 items-center gap-2 rounded-[var(--td-radius-md)] bg-[var(--td-color-primary)] px-6 py-3 font-bold text-xs text-[var(--td-text-inverse)] hover:opacity-90 transition shadow-md"
           >
-            Explore Jobs
+            <span>Explore Jobs</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

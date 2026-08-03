@@ -1,3 +1,5 @@
+// D:\tudulu\apps\web\components\layout\Navbar.tsx
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -35,10 +37,25 @@ export function Navbar() {
     }
   };
 
+  // Filter out News and Opportunities (Grants) from the platform navigation items if present
+  const filteredDirectoryItems = SITE_CONFIG.navigation.platform.filter(
+    (item) => {
+      const lowerName = item.name.toLowerCase();
+      const lowerHref = item.href.toLowerCase();
+      return (
+        !lowerName.includes("news") &&
+        !lowerName.includes("grant") &&
+        !lowerName.includes("opportunities") &&
+        !lowerHref.includes("news") &&
+        !lowerHref.includes("opportunities")
+      );
+    },
+  );
+
   return (
-    <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 text-slate-900 dark:text-slate-100 transition-all shadow-xs">
+    <header className="sticky top-0 z-50 bg-[var(--td-bg-surface-elevated)] backdrop-blur-md border-b border-[var(--td-border-subtle)] text-[var(--td-text)] transition-all shadow-xs">
       {/* Brand Accent Border: African Green -> Opportunity Gold */}
-      <div className="h-1 w-full bg-gradient-to-r from-green-700 via-emerald-600 to-amber-500" />
+      <div className="h-1 w-full bg-gradient-to-r from-[var(--td-color-primary)] via-emerald-600 to-[var(--td-color-secondary)]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
@@ -66,10 +83,10 @@ export function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search grants, NGOs, intelligence..."
-              className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-100/80 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-full focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-700/20 focus:bg-white dark:focus:bg-slate-950 transition-all text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
+              className="w-full pl-9 pr-4 py-1.5 text-xs bg-[var(--td-bg-soft)] border border-[var(--td-border-subtle)] rounded-full focus:outline-none focus:border-[var(--td-color-primary)] focus:ring-2 focus:ring-[var(--td-color-primary)]/20 focus:bg-[var(--td-bg-surface-elevated)] transition-all text-[var(--td-text)] placeholder:text-[var(--td-text-muted)]"
             />
             <svg
-              className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none"
+              className="w-4 h-4 text-[var(--td-text-muted)] absolute left-3 pointer-events-none"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -84,22 +101,22 @@ export function Navbar() {
           </form>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-semibold text-slate-600 dark:text-slate-300">
+          <nav className="hidden md:flex items-center space-x-6 text-sm font-semibold text-[var(--td-text-light)]">
             {/* Grants & Opportunities Active Indicator */}
             <Link
               href="/opportunities"
-              className="hover:text-green-800 dark:hover:text-green-400 transition-colors text-green-700 dark:text-green-500 font-bold flex items-center gap-2"
+              className="hover:text-[var(--td-color-primary)] transition-colors text-[var(--td-color-primary)] font-bold flex items-center gap-2"
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--td-color-primary)] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--td-color-primary)]"></span>
               </span>
               Grants & Opportunities
             </Link>
 
             <Link
               href="/news"
-              className="hover:text-green-700 dark:hover:text-green-400 transition-colors"
+              className="hover:text-[var(--td-color-primary)] transition-colors"
             >
               News & Intelligence
             </Link>
@@ -114,7 +131,7 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setIsPlatformMenuOpen(!isPlatformMenuOpen)}
-                className="inline-flex items-center gap-1 hover:text-green-700 dark:hover:text-green-400 transition-colors focus:outline-none"
+                className="inline-flex items-center gap-1 hover:text-[var(--td-color-primary)] transition-colors focus:outline-none"
                 aria-expanded={isPlatformMenuOpen}
                 aria-haspopup="true"
               >
@@ -138,16 +155,16 @@ export function Navbar() {
 
               {/* Dropdown Menu */}
               {isPlatformMenuOpen && (
-                <div className="absolute left-0 mt-0 w-60 rounded-2xl bg-white dark:bg-slate-900 shadow-xl border border-slate-100 dark:border-slate-800 py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
-                  <div className="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                <div className="absolute left-0 mt-0 w-60 rounded-2xl bg-[var(--td-bg-surface-elevated)] shadow-xl border border-[var(--td-border-subtle)] py-2 z-50 animate-in fade-in zoom-in-95 duration-100">
+                  <div className="px-4 py-1.5 text-[10px] font-bold text-[var(--td-text-muted)] uppercase tracking-widest">
                     Ecosystem Directory
                   </div>
-                  {SITE_CONFIG.navigation.platform.map((item) => (
+                  {filteredDirectoryItems.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setIsPlatformMenuOpen(false)}
-                      className="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+                      className="block px-4 py-2 text-sm text-[var(--td-text)] hover:bg-[var(--td-bg-soft)] hover:text-[var(--td-color-primary)] transition-colors"
                     >
                       {item.name}
                     </Link>
@@ -158,7 +175,7 @@ export function Navbar() {
 
             <Link
               href="/about"
-              className="hover:text-green-700 dark:hover:text-green-400 transition-colors"
+              className="hover:text-[var(--td-color-primary)] transition-colors"
             >
               About
             </Link>
@@ -168,7 +185,7 @@ export function Navbar() {
           <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-bold text-white bg-green-700 hover:bg-green-800 transition-all shadow-xs hover:shadow-md"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-bold text-[var(--td-text-inverse)] bg-[var(--td-color-primary)] hover:opacity-90 transition-all shadow-xs hover:shadow-md"
             >
               Partner With Us
             </Link>
@@ -179,7 +196,7 @@ export function Navbar() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               type="button"
-              className="p-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:text-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors td-touch-target"
+              className="p-2.5 rounded-xl text-[var(--td-text-light)] hover:text-[var(--td-text)] hover:bg-[var(--td-bg-soft)] transition-colors td-touch-target"
               aria-controls="mobile-menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -221,7 +238,7 @@ export function Navbar() {
       {/* Mobile Drawer Navigation */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-4 shadow-2xl animate-in slide-in-from-top duration-200"
+          className="md:hidden border-t border-[var(--td-border-subtle)] bg-[var(--td-bg-surface-elevated)] backdrop-blur-xl px-4 pt-3 pb-6 space-y-4 shadow-2xl animate-in slide-in-from-top duration-200"
           id="mobile-menu"
         >
           {/* Search Input for Mobile */}
@@ -231,10 +248,10 @@ export function Navbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search grants, NGOs, guides..."
-              className="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:border-green-700 focus:ring-2 focus:ring-green-700/20"
+              className="w-full pl-9 pr-4 py-2 text-sm bg-[var(--td-bg-soft)] border border-[var(--td-border-subtle)] rounded-xl text-[var(--td-text)] focus:outline-none focus:border-[var(--td-color-primary)] focus:ring-2 focus:ring-[var(--td-color-primary)]/20"
             />
             <svg
-              className="w-4 h-4 text-slate-400 absolute left-3 top-3"
+              className="w-4 h-4 text-[var(--td-text-muted)] absolute left-3 top-3"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -249,36 +266,17 @@ export function Navbar() {
           </form>
 
           {/* Navigation Links List */}
-          <nav className="flex flex-col space-y-1 font-medium text-slate-700 dark:text-slate-300">
-            <Link
-              href="/opportunities"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm font-bold text-green-800 dark:text-green-400 bg-emerald-50 dark:bg-emerald-950/40 flex items-center justify-between"
-            >
-              <span>Grants & Opportunities</span>
-              <span className="text-[10px] uppercase font-bold bg-amber-600 text-white px-2 py-0.5 rounded-full">
-                Active
-              </span>
-            </Link>
-
-            <Link
-              href="/news"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm hover:bg-emerald-50 dark:hover:bg-slate-900 hover:text-green-700 dark:hover:text-green-400 transition-colors"
-            >
-              News & Intelligence
-            </Link>
-
-            <div className="pt-2 pb-1 border-t border-slate-100 dark:border-slate-800 my-1">
-              <span className="px-3 text-[10px] font-bold uppercase text-slate-400 tracking-wider">
+          <nav className="flex flex-col space-y-1 font-medium text-[var(--td-text)]">
+            <div className="pt-2 pb-1 border-t border-[var(--td-border-subtle)] my-1">
+              <span className="px-3 text-[10px] font-bold uppercase text-[var(--td-text-muted)] tracking-wider">
                 Ecosystem Directory
               </span>
-              {SITE_CONFIG.navigation.platform.map((item) => (
+              {filteredDirectoryItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-3 py-2 rounded-lg text-sm hover:bg-emerald-50 dark:hover:bg-slate-900 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+                  className="block px-3 py-2 rounded-lg text-sm hover:bg-[var(--td-bg-soft)] hover:text-[var(--td-color-primary)] transition-colors"
                 >
                   {item.name}
                 </Link>
@@ -288,7 +286,7 @@ export function Navbar() {
             <Link
               href="/about"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="px-3 py-2.5 rounded-lg text-sm hover:bg-emerald-50 dark:hover:bg-slate-900 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+              className="px-3 py-2.5 rounded-lg text-sm hover:bg-[var(--td-bg-soft)] hover:text-[var(--td-color-primary)] transition-colors"
             >
               About
             </Link>
@@ -297,7 +295,7 @@ export function Navbar() {
               <Link
                 href="/contact"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block w-full text-center px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-green-700 hover:bg-green-800 shadow-sm"
+                className="block w-full text-center px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--td-text-inverse)] bg-[var(--td-color-primary)] hover:opacity-90 shadow-sm"
               >
                 Partner With Us
               </Link>

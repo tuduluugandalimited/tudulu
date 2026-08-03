@@ -1,3 +1,5 @@
+// D:\tudulu\apps\web\app\sports\page.tsx
+
 import { Metadata } from "next";
 import Link from "next/link";
 import { Card } from "@/components/ui/Card";
@@ -63,20 +65,20 @@ const sportsStats = [
 
 export default function SportsPage() {
   return (
-    <div className="min-h-screen bg-[var(--td-bg-canvas,#F8FAFC)] text-[var(--td-text-primary,#0F172A)] flex flex-col font-sans selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-[var(--td-bg-soft)] text-[var(--td-text)] flex flex-col font-sans selection:bg-[var(--td-color-primary)] selection:text-[var(--td-text-inverse)]">
       <main className="flex-1">
         {/* Hero Section */}
         <Section
           spacing="lg"
-          className="bg-white border-b border-slate-200 relative overflow-hidden"
+          className="relative overflow-hidden bg-[var(--td-bg)] border-b border-[var(--td-border-subtle)] py-20 sm:py-28"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f015_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f015_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
-          <Container size="md" className="relative z-10 text-center space-y-4">
-            <Badge variant="blue">Sports & Youth Analytics</Badge>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
-              Digital Tools for Grassroots Talent & Sports Organizations
+          <div className="absolute inset-0 td-glow-hero pointer-events-none" />
+          <Container size="md" className="relative z-10 text-center space-y-6">
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.15]">
+              Digital Tools for Grassroots Talent &{" "}
+              <span className="td-gradient-text">Sports Organizations</span>
             </h1>
-            <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-[var(--td-text-light)] max-w-2xl mx-auto leading-relaxed font-normal">
               We equip sports foundations, academies, and tournament organizers
               across East Africa with software to manage competitions, track
               equipment distribution, and highlight emerging athletic talent.
@@ -85,15 +87,21 @@ export default function SportsPage() {
         </Section>
 
         {/* Stats Bar */}
-        <Section spacing="sm" className="bg-white border-b border-slate-200">
+        <Section
+          spacing="sm"
+          className="bg-[var(--td-bg)] border-b border-[var(--td-border-subtle)] py-12"
+        >
           <Container size="lg">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-2">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {sportsStats.map((stat, i) => (
-                <div key={i} className="text-center space-y-1 p-3">
-                  <p className="text-2xl sm:text-3xl font-black text-sky-600 tracking-tight">
+                <div
+                  key={i}
+                  className="text-center space-y-1 p-5 bg-[var(--td-bg-soft)] border border-[var(--td-border-subtle)] rounded-[var(--td-radius-lg)]"
+                >
+                  <p className="text-2xl sm:text-4xl font-extrabold text-[var(--td-color-primary)] tracking-tight">
                     {stat.value}
                   </p>
-                  <p className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
+                  <p className="text-xs font-semibold text-[var(--td-text-muted)] uppercase tracking-wider mt-1">
                     {stat.label}
                   </p>
                 </div>
@@ -103,13 +111,19 @@ export default function SportsPage() {
         </Section>
 
         {/* Core Pillars Grid */}
-        <Section spacing="lg" className="bg-slate-50 border-b border-slate-200">
-          <Container size="lg" className="space-y-10">
-            <div className="text-center max-w-xl mx-auto space-y-2">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+        <Section
+          spacing="lg"
+          className="py-16 sm:py-24 bg-[var(--td-bg-soft)] border-b border-[var(--td-border-subtle)]"
+        >
+          <Container size="lg" className="space-y-12">
+            <div className="text-center max-w-xl mx-auto space-y-3">
+              <span className="text-xs font-bold text-[var(--td-color-primary)] uppercase tracking-widest">
+                Capabilities
+              </span>
+              <h2 className="text-3xl font-extrabold text-[var(--td-text)] tracking-tight">
                 Our Sports Technology Stack
               </h2>
-              <p className="text-slate-600 text-sm">
+              <p className="text-[var(--td-text-light)] text-sm sm:text-base">
                 Tailored solutions engineered to support sports academies and
                 youth outreach programs.
               </p>
@@ -119,27 +133,28 @@ export default function SportsPage() {
               {sportsPillars.map((pillar, idx) => (
                 <Card
                   key={idx}
-                  hoverable
-                  className="p-8 flex flex-col justify-between space-y-6 transition-all duration-200"
+                  className="td-card p-8 flex flex-col justify-between space-y-6 transition-all hover:border-[var(--td-color-primary)]"
                 >
                   <div className="space-y-4">
                     <Badge variant={pillar.variant}>{pillar.badge}</Badge>
-                    <h3 className="text-xl font-bold text-slate-900 leading-snug">
+                    <h3 className="text-xl font-bold text-[var(--td-text)] leading-snug">
                       {pillar.title}
                     </h3>
-                    <p className="text-slate-600 text-sm leading-relaxed">
+                    <p className="text-[var(--td-text-light)] text-sm leading-relaxed">
                       {pillar.description}
                     </p>
                   </div>
 
-                  <div className="border-t border-slate-100 pt-4 space-y-3">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="border-t border-[var(--td-border-subtle)] pt-6 space-y-3">
+                    <h4 className="text-xs font-bold text-[var(--td-text-muted)] uppercase tracking-wider">
                       Key Capabilities
                     </h4>
-                    <ul className="space-y-2 text-xs text-slate-600">
+                    <ul className="space-y-2 text-xs text-[var(--td-text-light)]">
                       {pillar.features.map((feat, fIdx) => (
                         <li key={fIdx} className="flex items-center gap-2">
-                          <span className="text-sky-600 font-bold">•</span>
+                          <span className="text-[var(--td-color-primary)] font-bold">
+                            •
+                          </span>
                           <span>{feat}</span>
                         </li>
                       ))}
@@ -152,28 +167,27 @@ export default function SportsPage() {
         </Section>
 
         {/* Call to Action Banner */}
-        <Section spacing="lg" className="bg-white">
+        <Section spacing="lg" className="py-20 sm:py-28 bg-[var(--td-bg)]">
           <Container size="md">
-            <Card className="p-8 sm:p-12 text-center space-y-6 bg-slate-900 text-white rounded-2xl shadow-sm">
-              <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            <Card className="td-card p-8 sm:p-12 text-center space-y-6 bg-[var(--td-bg)] border-[var(--td-border-subtle)] shadow-md">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[var(--td-text)] tracking-tight">
                 Partner with Tudulu Sports
               </h2>
-              <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+              <p className="text-[var(--td-text-light)] text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
                 Whether you run a regional youth league, operate an athletic
                 academy, or manage sports equipment grant programs, we are ready
                 to build with you.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/contact">
-                  <Button variant="primary" size="lg">
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button className="w-full sm:w-auto px-8 py-3.5 bg-[var(--td-color-primary)] hover:opacity-90 text-[var(--td-text-inverse)] font-semibold text-xs rounded-[var(--td-radius-md)] transition-all">
                     Get in Touch
                   </Button>
                 </Link>
-                <Link href="/opportunities">
+                <Link href="/opportunities" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
-                    size="lg"
-                    className="border-slate-700 text-white hover:bg-slate-800"
+                    className="w-full sm:w-auto px-8 py-3.5 bg-[var(--td-bg-surface-elevated)] hover:bg-[var(--td-border-subtle)] text-[var(--td-text)] font-semibold text-xs rounded-[var(--td-radius-md)] transition-all border-[var(--td-border)]"
                   >
                     View Sports Grants
                   </Button>

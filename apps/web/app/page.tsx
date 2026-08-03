@@ -16,7 +16,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-white">
       <Hero />
       <SearchSection />
-      <FeaturedNews />
+
       <FeaturedOpportunities />
       <FeaturedOrganizations />
       <FeaturedJobs />

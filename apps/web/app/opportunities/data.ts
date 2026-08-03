@@ -50,7 +50,7 @@ export const opportunitiesData: Opportunity[] = [
       { label: "Submission Deadline", date: "August 30, 2026" },
       { label: "Grant Awards Announced", date: "October 15, 2026" },
     ],
-    contactEmail: "grants@tudulu.org",
+    contactEmail: "tuduluugandalimited@gmail.com",
   },
   {
     id: "2",
@@ -76,7 +76,7 @@ export const opportunitiesData: Opportunity[] = [
       { label: "Subsidies Open", date: "Rolling Basis" },
       { label: "Site Inspection Cycle", date: "Bi-Weekly" },
     ],
-    contactEmail: "energy@tudulu.org",
+    contactEmail: "tuduluugandalimited@gmail.com",
   },
   {
     id: "3",
@@ -102,7 +102,7 @@ export const opportunitiesData: Opportunity[] = [
       { label: "Partner Applications", date: "September 15, 2026" },
       { label: "Software Onboarding", date: "October 1, 2026" },
     ],
-    contactEmail: "sports@tudulu.org",
+    contactEmail: "tuduluugandalimited@gmail.com",
   },
   {
     id: "4",
@@ -128,6 +128,6 @@ export const opportunitiesData: Opportunity[] = [
       { label: "Applications Close", date: "October 12, 2026" },
       { label: "Fellowship Starts", date: "November 1, 2026" },
     ],
-    contactEmail: "fellows@tudulu.org",
+    contactEmail: "tuduluugandalimited@gmail.com",
   },
 ];

@@ -1,3 +1,5 @@
+// D:\tudulu\apps\web\app\news\page.tsx
+
 import Link from "next/link";
 import { Metadata } from "next";
 import { Card } from "@/components/ui/Card";
@@ -62,20 +64,19 @@ export const metadata: Metadata = {
 
 export default function NewsPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-[var(--td-bg)] text-[var(--td-text)] flex flex-col font-sans selection:bg-[var(--td-color-primary)] selection:text-[var(--td-text-inverse)]">
       <main className="flex-1">
         {/* Header Section */}
         <Section
           spacing="lg"
-          className="bg-white border-b border-slate-200 relative overflow-hidden py-16 sm:py-20"
+          className="bg-[var(--td-bg-surface-elevated)] border-b border-[var(--td-border-subtle)] relative overflow-hidden py-16 sm:py-20"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f015_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f015_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--td-border-subtle)_1px,transparent_1px),linear-gradient(to_bottom,var(--td-border-subtle)_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30 pointer-events-none" />
           <Container size="md" className="relative z-10 text-center space-y-4">
-            <Badge variant="blue">Impact & Updates</Badge>
-            <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-[var(--td-text)] tracking-tight">
               Latest News
             </h1>
-            <p className="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+            <p className="text-[var(--td-text-light)] text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
               Insights, technical breakdowns, and updates on our field
               engineering, offline medical systems, and edge data architectures.
             </p>
@@ -83,14 +84,14 @@ export default function NewsPage() {
         </Section>
 
         {/* News Grid Section */}
-        <Section spacing="lg" className="bg-slate-50 py-12 sm:py-16">
+        <Section spacing="lg" className="bg-[var(--td-bg)] py-12 sm:py-16">
           <Container size="lg">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {articles.map((item) => (
                 <Card
                   key={item.id}
                   hoverable
-                  className="p-6 flex flex-col justify-between group transition-all duration-200 bg-white border border-slate-200 shadow-xs"
+                  className="p-6 flex flex-col justify-between group transition-all duration-200 bg-[var(--td-bg-soft)] rounded-[var(--td-radius-lg)] border border-[var(--td-border-subtle)] hover:border-[var(--td-border)] shadow-xs"
                 >
                   <Link
                     href={`/news/${item.id}`}
@@ -101,24 +102,24 @@ export default function NewsPage() {
                       <Badge variant={item.variant || "blue"}>
                         {item.category}
                       </Badge>
-                      <span className="text-slate-500 font-medium">
+                      <span className="text-[var(--td-text-muted)] font-medium">
                         {item.date}
                       </span>
                     </div>
 
-                    <h2 className="text-lg font-bold text-slate-900 leading-snug group-hover:text-sky-600 transition-colors pt-1">
+                    <h2 className="text-lg font-bold text-[var(--td-text)] leading-snug group-hover:text-[var(--td-color-primary)] transition-colors pt-1">
                       {item.title}
                     </h2>
 
-                    <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
+                    <p className="text-[var(--td-text-light)] text-sm line-clamp-3 leading-relaxed">
                       {item.summary}
                     </p>
                   </Link>
 
-                  <div className="pt-6 border-t border-slate-100 mt-6">
+                  <div className="pt-6 border-t border-[var(--td-border-subtle)] mt-6">
                     <Link
                       href={`/news/${item.id}`}
-                      className="text-xs font-semibold text-slate-600 group-hover:text-sky-600 transition-colors inline-flex items-center gap-1.5 focus:outline-none"
+                      className="text-xs font-semibold text-[var(--td-text-light)] group-hover:text-[var(--td-color-primary)] transition-colors inline-flex items-center gap-1.5 focus:outline-none"
                     >
                       <span>Read article</span>
                       <span className="transition-transform duration-200 group-hover:translate-x-1">

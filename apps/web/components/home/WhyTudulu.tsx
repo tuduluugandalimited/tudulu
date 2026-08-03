@@ -1,4 +1,5 @@
-// components/home/WhyTudulu.tsx
+// D:\tudulu\apps\web\components\home\WhyTudulu.tsx
+
 import { Container } from "@/components/ui/Container";
 import { Compass, Network, TrendingUp } from "lucide-react";
 
@@ -35,13 +36,13 @@ export function WhyTudulu() {
       <Container size="lg">
         {/* Header */}
         <div className="max-w-2xl mb-12 sm:mb-16 td-slide-up">
-          <p className="text-xs font-bold text-green-700 dark:text-green-500 uppercase tracking-widest mb-2">
+          <p className="text-xs font-bold text-[var(--td-color-primary)] uppercase tracking-widest mb-2">
             Platform Purpose
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--td-text)] tracking-tight">
             Why Tudulu?
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg mt-2">
+          <p className="text-[var(--td-text-light)] text-base sm:text-lg mt-2">
             Built to reduce information asymmetry and power data-driven progress
             across Africa.
           </p>
@@ -54,23 +55,23 @@ export function WhyTudulu() {
             return (
               <div
                 key={pillar.id}
-                className="group relative p-8 td-card-interactive flex flex-col justify-between"
+                className="group relative p-8 td-card-interactive flex flex-col justify-between bg-[var(--td-bg-soft)] rounded-[var(--td-radius-lg)] border border-[var(--td-border-subtle)] hover:border-[var(--td-border)] transition-all duration-200"
               >
                 <div className="space-y-4">
                   {/* Icon Container with Green -> Gold Interaction */}
-                  <div className="w-12 h-12 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-center text-slate-900 dark:text-slate-100 group-hover:text-amber-600 group-hover:border-green-700/40 td-transition-colors shrink-0">
-                    <Icon className="w-6 h-6 td-transition-transform group-hover:scale-110 shrink-0" />
+                  <div className="w-12 h-12 rounded-[var(--td-radius-md)] bg-[var(--td-bg)] border border-[var(--td-border-subtle)] shadow-sm flex items-center justify-center text-[var(--td-text)] group-hover:text-[var(--td-color-secondary)] group-hover:border-[var(--td-color-primary)]/40 transition-colors shrink-0">
+                    <Icon className="w-6 h-6 transition-transform group-hover:scale-110 shrink-0" />
                   </div>
 
                   {/* Text Content */}
                   <div>
-                    <span className="text-xs font-bold text-green-700 dark:text-green-400 tracking-wider uppercase">
+                    <span className="text-xs font-bold text-[var(--td-color-primary)] tracking-wider uppercase">
                       {pillar.title}
                     </span>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1 leading-snug">
+                    <h3 className="text-xl font-bold text-[var(--td-text)] mt-1 leading-snug">
                       {pillar.subtitle}
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-3 leading-relaxed">
+                    <p className="text-[var(--td-text-light)] text-sm mt-3 leading-relaxed">
                       {pillar.description}
                     </p>
                   </div>

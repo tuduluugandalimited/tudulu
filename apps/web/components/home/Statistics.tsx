@@ -1,4 +1,5 @@
-// components/home/Statistics.tsx
+// D:\tudulu\apps\web\components\home\Statistics.tsx
+
 import { Container } from "@/components/ui/Container";
 import {
   Building2,
@@ -7,7 +8,7 @@ import {
   Globe2,
   HandCoins,
   Network,
-  LucideIcon,
+  type LucideIcon,
 } from "lucide-react";
 
 interface StatItem {
@@ -68,20 +69,20 @@ export async function Statistics() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-slate-900 text-white border-y border-slate-800 relative overflow-hidden">
+    <section className="py-20 sm:py-28 bg-[var(--td-bg-surface-elevated)] text-[var(--td-text)] border-y border-[var(--td-border-subtle)] relative overflow-hidden">
       {/* Background glow overlay */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[350px] bg-sky-500/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[350px] bg-[var(--td-color-primary)]/10 blur-[120px] rounded-full pointer-events-none" />
 
       <Container size="lg" className="relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mb-16 text-center mx-auto">
-          <p className="text-xs font-semibold text-sky-400 uppercase tracking-widest mb-3">
+          <p className="text-xs font-semibold text-[var(--td-color-primary)] uppercase tracking-widest mb-3">
             Trusted Across Africa
           </p>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-[var(--td-text)] leading-tight">
             Africa's Development Intelligence at Scale
           </h2>
-          <p className="text-slate-400 text-base sm:text-lg mt-4 leading-relaxed">
+          <p className="text-[var(--td-text-light)] text-base sm:text-lg mt-4 leading-relaxed">
             Connecting organizations, donors, researchers, governments, and
             changemakers through verified opportunities, trusted data, and
             actionable intelligence across all 54 African countries.
@@ -95,23 +96,23 @@ export async function Statistics() {
             return (
               <div
                 key={stat.id}
-                className="group relative p-8 bg-slate-950/60 hover:bg-slate-950 rounded-2xl border border-slate-800 hover:border-sky-500/50 transition-all duration-200 flex flex-col justify-between shadow-xl"
+                className="group relative p-8 bg-[var(--td-bg-soft)] hover:bg-[var(--td-bg)] rounded-[var(--td-radius-lg)] border border-[var(--td-border-subtle)] hover:border-[var(--td-color-primary)]/50 transition-all duration-200 flex flex-col justify-between shadow-xl"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <div className="p-3 rounded-xl bg-slate-900 text-sky-400 group-hover:bg-sky-500 group-hover:text-slate-950 transition-colors shrink-0 border border-slate-800 group-hover:border-sky-500">
+                    <div className="p-3 rounded-[var(--td-radius-md)] bg-[var(--td-bg)] text-[var(--td-color-primary)] group-hover:bg-[var(--td-color-primary)] group-hover:text-[var(--td-text-inverse)] transition-colors shrink-0 border border-[var(--td-border-subtle)] group-hover:border-[var(--td-color-primary)]">
                       <Icon className="w-6 h-6 shrink-0" />
                     </div>
-                    <span className="text-4xl sm:text-5xl font-black tracking-tight text-white bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
+                    <span className="text-4xl sm:text-5xl font-black tracking-tight text-[var(--td-text)]">
                       {stat.value}
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-white group-hover:text-sky-400 transition-colors">
+                    <h3 className="text-lg font-bold text-[var(--td-text)] group-hover:text-[var(--td-color-primary)] transition-colors">
                       {stat.label}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-400 mt-1.5 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[var(--td-text-light)] mt-1.5 leading-relaxed">
                       {stat.description}
                     </p>
                   </div>

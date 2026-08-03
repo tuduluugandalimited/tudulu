@@ -1,4 +1,5 @@
-// components/home/Sectors.tsx
+// D:\tudulu\apps\web\components\home\Sectors.tsx
+
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import {
@@ -83,17 +84,17 @@ export function Sectors() {
   ];
 
   return (
-    <section className="py-20 sm:py-28 bg-slate-50 border-y border-slate-200">
+    <section className="py-20 sm:py-28 bg-[var(--td-bg)] text-[var(--td-text)] border-y border-[var(--td-border-subtle)]">
       <Container size="lg">
         {/* Header */}
         <div className="max-w-2xl mb-12 sm:mb-16">
-          <p className="text-xs font-semibold text-sky-600 uppercase tracking-widest mb-2">
+          <p className="text-xs font-semibold text-[var(--td-color-primary)] uppercase tracking-widest mb-2">
             Ecosystem Focus
           </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--td-text)] tracking-tight">
             Explore by Sector
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg mt-2">
+          <p className="text-[var(--td-text-light)] text-base sm:text-lg mt-2">
             Find funding, organizations, news, and research tailored to your
             focus area across Africa.
           </p>
@@ -107,31 +108,31 @@ export function Sectors() {
               <Link
                 key={sector.id}
                 href={sector.href}
-                className="group relative flex flex-col justify-between p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-slate-300 transition-all duration-200"
+                className="group relative flex flex-col justify-between p-6 bg-[var(--td-bg-soft)] rounded-[var(--td-radius-lg)] border border-[var(--td-border-subtle)] shadow-sm hover:shadow-md hover:border-[var(--td-border)] transition-all duration-200"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
-                    <div className="p-3 rounded-xl bg-slate-100 text-slate-800 group-hover:bg-sky-50 group-hover:text-sky-600 transition-colors shrink-0">
+                    <div className="p-3 rounded-[var(--td-radius-md)] bg-[var(--td-bg)] text-[var(--td-text)] group-hover:bg-[var(--td-color-primary)]/10 group-hover:text-[var(--td-color-primary)] transition-colors shrink-0">
                       <Icon className="w-6 h-6 shrink-0" />
                     </div>
                     {sector.badge && (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 shrink-0">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[var(--td-color-primary)]/10 text-[var(--td-color-primary)] shrink-0">
                         {sector.badge}
                       </span>
                     )}
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors leading-snug">
+                    <h3 className="text-lg font-bold text-[var(--td-text)] group-hover:text-[var(--td-color-primary)] transition-colors leading-snug">
                       {sector.name}
                     </h3>
-                    <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                    <p className="text-[var(--td-text-light)] text-xs sm:text-sm mt-1.5 leading-relaxed">
                       {sector.description}
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-6 mt-4 border-t border-slate-100 flex items-center text-xs font-semibold text-slate-400 group-hover:text-sky-600 transition-colors">
+                <div className="pt-6 mt-4 border-t border-[var(--td-border-subtle)] flex items-center text-xs font-semibold text-[var(--td-text-muted)] group-hover:text-[var(--td-color-primary)] transition-colors">
                   <span>Browse sector</span>
                   <ArrowRight className="w-3.5 h-3.5 ml-1 group-hover:translate-x-1 transition-transform shrink-0" />
                 </div>

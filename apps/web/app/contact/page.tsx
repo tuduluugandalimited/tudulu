@@ -13,22 +13,28 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans selection:bg-sky-500 selection:text-white">
+    <div className="min-h-screen bg-[var(--td-bg-soft)] text-[var(--td-text)] flex flex-col font-sans selection:bg-[var(--td-color-primary)] selection:text-[var(--td-text-inverse)]">
       <main className="flex-1">
         {/* Header / Hero Section */}
         <Section
           spacing="lg"
-          className="relative overflow-hidden bg-white border-b border-slate-100 py-16 sm:py-20"
+          className="relative overflow-hidden bg-[var(--td-bg)] border-b border-[var(--td-border-subtle)] py-20 sm:py-28"
         >
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f015_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f015_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
+          <div className="absolute inset-0 td-glow-hero pointer-events-none" />
           <Container size="md" className="relative z-10 text-center space-y-4">
-            <Badge variant="emerald">Get In Touch</Badge>
+            <Badge
+              variant="emerald"
+              className="px-3 py-1 text-xs font-medium rounded-full bg-[var(--td-color-primary-light)] text-[var(--td-color-primary)]"
+            >
+              Get In Touch
+            </Badge>
 
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
-              Contact Tudulu Uganda Limited
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">
+              Contact{" "}
+              <span className="td-gradient-text">Tudulu Uganda Limited</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+            <p className="text-base sm:text-lg text-[var(--td-text-light)] max-w-2xl mx-auto leading-relaxed font-normal">
               Have questions about our digital health systems, field data
               platforms, or technical partnerships? Reach out directly to our
               team.
@@ -37,21 +43,21 @@ export default function ContactPage() {
         </Section>
 
         {/* Contact Form & Information Grid */}
-        <Section spacing="lg" className="py-12 sm:py-16">
+        <Section spacing="lg" className="py-16 sm:py-20 bg-[var(--td-bg-soft)]">
           <Container size="lg">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Column: Direct Info Cards */}
-              <div className="lg:col-span-5 space-y-4">
-                <Card className="p-6 bg-white border border-slate-200 shadow-xs space-y-6">
-                  <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3">
+              <div className="lg:col-span-5 space-y-6">
+                <Card className="td-card p-8 space-y-6">
+                  <h2 className="text-lg font-bold text-[var(--td-text)] border-b border-[var(--td-border-subtle)] pb-4">
                     Contact Details
                   </h2>
 
                   {/* Office Location */}
                   <div className="flex items-start space-x-4">
-                    <div className="p-2.5 bg-slate-100 text-slate-700 rounded-lg shrink-0 mt-0.5">
+                    <div className="p-3 bg-[var(--td-bg-surface-elevated)] text-[var(--td-text)] rounded-[var(--td-radius-md)] shrink-0 mt-0.5">
                       <svg
-                        className="w-5 h-5"
+                        className="w-5 h-5 text-[var(--td-color-primary)]"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -71,18 +77,18 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <h3 className="text-xs font-bold text-[var(--td-text-muted)] uppercase tracking-wider">
                         Headquarters
                       </h3>
-                      <p className="text-slate-900 text-sm mt-0.5 font-semibold">
+                      <p className="text-[var(--td-text)] text-sm sm:text-base mt-0.5 font-semibold">
                         Kampala, Uganda
                       </p>
                     </div>
                   </div>
 
                   {/* Email */}
-                  <div className="flex items-start space-x-4 pt-2 border-t border-slate-100">
-                    <div className="p-2.5 bg-sky-50 text-sky-600 rounded-lg shrink-0 mt-0.5">
+                  <div className="flex items-start space-x-4 pt-4 border-t border-[var(--td-border-subtle)]">
+                    <div className="p-3 bg-[var(--td-color-primary-light)] text-[var(--td-color-primary)] rounded-[var(--td-radius-md)] shrink-0 mt-0.5">
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -98,12 +104,12 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <h3 className="text-xs font-bold text-[var(--td-text-muted)] uppercase tracking-wider">
                         Email Inquiry
                       </h3>
                       <a
                         href="mailto:tuduluugandalimited@gmail.com"
-                        className="text-sky-600 hover:text-sky-700 hover:underline text-sm mt-0.5 block font-semibold transition-colors break-all"
+                        className="text-[var(--td-color-primary)] hover:underline text-sm sm:text-base mt-0.5 block font-semibold transition-colors break-all"
                       >
                         tuduluugandalimited@gmail.com
                       </a>
@@ -111,8 +117,8 @@ export default function ContactPage() {
                   </div>
 
                   {/* Phone */}
-                  <div className="flex items-start space-x-4 pt-2 border-t border-slate-100">
-                    <div className="p-2.5 bg-emerald-50 text-emerald-600 rounded-lg shrink-0 mt-0.5">
+                  <div className="flex items-start space-x-4 pt-4 border-t border-[var(--td-border-subtle)]">
+                    <div className="p-3 bg-[var(--td-color-gold-light)] text-[var(--td-color-gold)] rounded-[var(--td-radius-md)] shrink-0 mt-0.5">
                       <svg
                         className="w-5 h-5"
                         fill="none"
@@ -128,12 +134,12 @@ export default function ContactPage() {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      <h3 className="text-xs font-bold text-[var(--td-text-muted)] uppercase tracking-wider">
                         Phone / WhatsApp
                       </h3>
                       <a
                         href="tel:+256750692621"
-                        className="text-sky-600 hover:text-sky-700 hover:underline text-sm mt-0.5 block font-semibold transition-colors"
+                        className="text-[var(--td-color-primary)] hover:underline text-sm sm:text-base mt-0.5 block font-semibold transition-colors"
                       >
                         +256 750 692 621
                       </a>
@@ -142,22 +148,27 @@ export default function ContactPage() {
                 </Card>
 
                 {/* Direct Support Note */}
-                <Card className="p-6 bg-slate-900 text-white border-0 shadow-xs">
-                  <h3 className="text-sm font-bold text-slate-100 mb-1">
-                    Looking for Partnerships?
-                  </h3>
-                  <p className="text-slate-400 text-xs leading-relaxed">
-                    We actively collaborate with healthcare organizations,
-                    research groups, and government stakeholders. Send us a
-                    detailed note to discuss technical integration or field
-                    pilot initiatives.
-                  </p>
+                <Card className="p-8 bg-[var(--td-bg-dark)] text-white border-0 rounded-[var(--td-radius-lg)] shadow-[var(--td-shadow-md)] space-y-2 relative overflow-hidden">
+                  <div className="absolute inset-0 td-glow-dark opacity-30 pointer-events-none" />
+                  <div className="relative z-10 space-y-2">
+                    <h3 className="text-base font-bold text-slate-100">
+                      Looking for Partnerships?
+                    </h3>
+                    <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                      We actively collaborate with healthcare organizations,
+                      research groups, and government stakeholders. Send us a
+                      detailed note to discuss technical integration or field
+                      pilot initiatives.
+                    </p>
+                  </div>
                 </Card>
               </div>
 
               {/* Right Column: Client Form Component */}
               <div className="lg:col-span-7">
-                <ContactForm />
+                <Card className="td-card p-8">
+                  <ContactForm />
+                </Card>
               </div>
             </div>
           </Container>

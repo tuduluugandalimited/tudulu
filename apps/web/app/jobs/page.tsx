@@ -5,7 +5,6 @@ import {
   MOCK_JOB_OPPORTUNITIES,
   AVAILABLE_JOB_TYPES,
   AVAILABLE_EXPERIENCE_LEVELS,
-  JobOpportunity,
 } from "./data";
 import Link from "next/link";
 import {
