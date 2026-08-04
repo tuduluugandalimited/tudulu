@@ -16,9 +16,17 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
+    "prisma": "^7.9.1",
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.4",
+    "@nestjs/config": "^4.0.4",
+    "@prisma/client": "^7.9.1",
+    "bullmq": "^5.81.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.15.1",
+    "ioredis": "^6.0.0",
     "lucide-react": "^1.28.0"
   }
 }

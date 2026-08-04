@@ -1,13 +1,18 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+// D:\tudulu\apps\api\prisma\schema.prisma
 
 generator client {
   provider = "prisma-client-js"
 }
 
-// Global Taxonomy Enums
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// GLOBAL TAXONOMY & ENUMS
+// ==========================================
+
 enum Role {
   SUPER_ADMIN
   ADMIN
@@ -38,128 +43,238 @@ enum EntityType {
   CBO
 }
 
+// ==========================================
+// USER & ACCESS MANAGEMENT
+// ==========================================
+
 model User {
-  id            String          @id @default(uuid())
-  email         String          @unique
-  passwordHash  String
-  fullName      String
-  role          Role            @default(REGISTERED_USER)
-  avatarUrl     String?
-  bio           String?
+  id             String         @id @default(uuid())
+  email          String         @unique
+  passwordHash   String         @map("password_hash")
+  fullName       String         @map("full_name")
+  role           Role           @default(REGISTERED_USER)
+  avatarUrl      String?        @map("avatar_url")
+  bio            String?        @db.Text
   
-  // Relations
-  organizationId String?
-  organization   Organization?  @relation(fields: [organizationId], references: [id])
+  organizationId String?        @map("organization_id")
+  organization   Organization?  @relation(fields: [organizationId], references: [id], onDelete: SetNull)
   bookmarks      Bookmark[]
   notifications  Notification[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  @@map("users")
 }
+
+// ==========================================
+// MASTER GEOGRAPHY & TAXONOMIES
+// ==========================================
+
+model Region {
+  id          String    @id @default(uuid())
+  name        String    @unique // e.g. "East Africa", "West Africa"
+  slug        String    @unique
+  countries   Country[]
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("regions")
+}
+
+model Country {
+  id            String         @id @default(uuid())
+  name          String         @unique // e.g. "Uganda", "Kenya"
+  slug          String         @unique
+  code          String         @unique // ISO 2-letter e.g. "UG", "KE"
+  regionId      String         @map("region_id")
+  region        Region         @relation(fields: [regionId], references: [id], onDelete: Restrict)
+  organizations Organization[]
+  articles      Article[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@map("countries")
+}
+
+model Sector {
+  id            String         @id @default(uuid())
+  name          String         @unique // e.g. "Health", "FinTech", "Energy"
+  slug          String         @unique
+  description   String?        @db.Text
+  organizations Organization[]
+  opportunities Opportunity[]
+  articles      Article[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@map("sectors")
+}
+
+// ==========================================
+// ORGANIZATIONS (THE HEART OF TUDULU)
+// ==========================================
 
 model Organization {
-  id              String         @id @default(uuid())
-  name            String
-  slug            String         @unique
-  type            EntityType
-  logoUrl         String?
-  isVerified      Boolean        @default(false)
-  registrationNo  String?
-  description     String         @db.Text
-  website         String?
+  id             String           @id @default(uuid())
+  name           String
+  slug           String           @unique
+  type           EntityType
+  logoUrl        String?          @map("logo_url")
+  isVerified     Boolean          @default(false) @map("is_verified")
+  registrationNo String?          @map("registration_no")
+  description    String           @db.Text
+  website        String?
   
-  // Location
-  countryCode     String         // e.g. "UG", "KE"
-  region          String?
-  
+  // Sector Relation (Added for proper pan-African intelligence taxonomy)
+  sectorId       String           @map("sector_id")
+  sector         Sector           @relation(fields: [sectorId], references: [id], onDelete: Restrict)
+
+  // Location / Country Relation
+  countryCode    String           @map("country_code") // Retained 2-letter code for compatibility
+  countryId      String           @map("country_id")
+  country        Country          @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  region         String?          // Descriptive sub-region if needed
+
   // Relations
-  members         User[]
-  opportunities   Opportunity[]
-  projects        Project[]
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
+  members        User[]
+  opportunities  Opportunity[]
+  projects       Project[]
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@map("organizations")
 }
+
+// ==========================================
+// OPPORTUNITIES (JOBS, GRANTS, TENDERS)
+// ==========================================
 
 model Opportunity {
-  id              String          @id @default(uuid())
-  title           String
-  slug            String          @unique
-  type            OpportunityType
-  summary         String          @db.Text
-  description     String          @db.Text
-  location        String
-  deadline        DateTime?
-  amountUSD       Decimal?        // For Grants/Funding
+  id             String          @id @default(uuid())
+  title          String
+  slug           String          @unique
+  type           OpportunityType
+  summary        String          @db.Text
+  description    String          @db.Text
+  location       String
+  deadline       DateTime?
+  amountUSD      Decimal?        @map("amount_usd") @db.Decimal(12, 2)
   
   // Relations
-  organizationId  String
-  organization    Organization    @relation(fields: [organizationId], references: [id])
-  categoryId      String
-  category        Category        @relation(fields: [categoryId], references: [id])
-  tags            Tag[]
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
+  organizationId String          @map("organization_id")
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  categoryId     String          @map("category_id")
+  category       Category        @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  
+  sectorId       String          @map("sector_id")
+  sector         Sector          @relation(fields: [sectorId], references: [id], onDelete: Restrict)
+
+  tags           Tag[]           @relation("OpportunityTags")
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@map("opportunities")
 }
 
+// ==========================================
+// ARTICLES & NEWS INTELLIGENCE
+// ==========================================
+
 model Article {
-  id              String    @id @default(uuid())
-  title           String
-  slug            String    @unique
-  content         String    @db.Text
-  aiSummary       String?   @db.Text
-  featuredImage   String?
-  publishedAt     DateTime?
-  isTrending      Boolean   @default(false)
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  content        String    @db.Text
+  aiSummary      String?   @map("ai_summary") @db.Text
+  featuredImage  String?   @map("featured_image")
+  publishedAt    DateTime? @map("published_at")
+  isTrending     Boolean   @default(false) @map("is_trending")
   
-  // Metadata
-  countryCode     String?   // ISO code for filtering
-  categoryId      String
-  category        Category  @relation(fields: [categoryId], references: [id])
-  tags            Tag[]
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  // Metadata & Geography
+  countryCode    String?   @map("country_code")
+  countryId      String?   @map("country_id")
+  country        Country?  @relation(fields: [countryId], references: [id], onDelete: SetNull)
+
+  categoryId     String    @map("category_id")
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  sectorId       String    @map("sector_id")
+  sector         Sector    @relation(fields: [sectorId], references: [id], onDelete: Restrict)
+
+  tags           Tag[]     @relation("ArticleTags")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@map("articles")
 }
+
+// ==========================================
+// CATEGORIES & TAGS TAXONOMY
+// ==========================================
 
 model Category {
   id            String        @id @default(uuid())
-  name          String        @unique // Health, Sports, Climate, etc.
+  name          String        @unique // e.g. "News", "Policy", "Grants"
   slug          String        @unique
   articles      Article[]
   opportunities Opportunity[]
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@map("categories")
 }
 
 model Tag {
   id            String        @id @default(uuid())
   name          String        @unique
-  articles      Article[]
-  opportunities Opportunity[]
+  slug          String        @unique
+  articles      Article[]     @relation("ArticleTags")
+  opportunities Opportunity[] @relation("OpportunityTags")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@map("tags")
 }
 
+// ==========================================
+// USER INTERACTIONS & SYSTEM ASSETS
+// ==========================================
+
 model Bookmark {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  entityId  String   // Generic UUID for Article, Opportunity, or Org
-  entityType String  // "ARTICLE" | "OPPORTUNITY" | "ORG"
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  userId     String   @map("user_id")
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entityId   String   @map("entity_id") // Generic UUID for Article, Opportunity, or Org
+  entityType String   @map("entity_type") // "ARTICLE" | "OPPORTUNITY" | "ORG"
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("bookmarks")
 }
 
 model Notification {
   id        String   @id @default(uuid())
-  userId    String
+  userId    String   @map("user_id")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String
-  message   String
-  isRead    Boolean  @default(false)
-  createdAt DateTime @default(now())
+  message   String   @db.Text
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("notifications")
 }
 
 model Project {
   id             String       @id @default(uuid())
   title          String
+  slug           String       @unique
   description    String       @db.Text
   latitude       Float?
   longitude      Float?
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime     @default(now())
+  organizationId String       @map("organization_id")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@map("projects")
 }
