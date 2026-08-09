@@ -12,9 +12,7 @@
     "dev:api": "npm run dev --workspace=apps/api",
     "dev:all": "npm run dev --workspaces --if-present",
     "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces",
-    "build:api": "cd apps/api && npm install && npm run build",
-    "start:api": "cd apps/api && npm run start:prod"
+    "lint": "npm run lint --workspaces"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.3",
