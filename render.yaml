@@ -4,9 +4,8 @@ services:
     env: node
     region: frankfurt
     plan: free
-    rootDir: apps/api
-    buildCommand: npm install --prefix ../.. --legacy-peer-deps && npx prisma generate && npm run build
-    startCommand: node dist/main
+    buildCommand: npm install --legacy-peer-deps && npm run build --workspace=apps/api
+    startCommand: node apps/api/dist/main
     envVars:
       - key: NODE_ENV
         value: production
