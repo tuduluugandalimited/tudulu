@@ -1,13 +1,12 @@
 // D:\tudulu\apps\api\prisma.config.ts
-import "dotenv/config";
-import { defineConfig, env } from "prisma/config";
+require("dotenv/config");
 
-export default defineConfig({
+module.exports = {
   schema: "prisma/schema.prisma",
   datasource: {
-    url: env("DATABASE_URL"),
+    url: process.env.DATABASE_URL,
   },
   migrations: {
     seed: "ts-node prisma/seed.ts",
   },
-});
+};
