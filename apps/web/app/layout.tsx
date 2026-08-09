@@ -1,17 +1,19 @@
+// D:\tudulu\apps\web\app\layout.tsx
+
 import type { Metadata } from "next";
 import Script from "next/script";
 import "@/styles/globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-// Central config fallback
+// Central config fallback with multiple GA IDs supported
 const SITE_CONFIG = {
   name: "Tudulu",
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
   gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-MCL2JTZC",
-  gaId: process.env.NEXT_PUBLIC_GA_ID || "G-6CH31J565R",
+  gaIds: [process.env.NEXT_PUBLIC_GA_ID || "G-6CH31J565R", "G-NSQL7NBP5E"],
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
@@ -76,15 +78,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const primaryGaId = SITE_CONFIG.gaIds[0];
+  const secondaryGaId = SITE_CONFIG.gaIds[1];
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Google Analytics 4 (gtag.js) */}
-        {SITE_CONFIG.gaId && (
+        {/* Google Analytics 4 (gtag.js) for both accounts */}
+        {primaryGaId && (
           <>
             <Script
               async
-              src={`https://www.googletagmanager.com/gtag/js?id=${SITE_CONFIG.gaId}`}
+              src={`https://www.googletagmanager.com/gtag/js?id=${primaryGaId}`}
               strategy="afterInteractive"
             />
             <Script
@@ -95,7 +100,8 @@ export default function RootLayout({
                   window.dataLayer = window.dataLayer || [];
                   function gtag(){dataLayer.push(arguments);}
                   gtag('js', new Date());
-                  gtag('config', '${SITE_CONFIG.gaId}');
+                  gtag('config', '${primaryGaId}');
+                  ${secondaryGaId ? `gtag('config', '${secondaryGaId}');` : ""}
                 `,
               }}
             />

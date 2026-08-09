@@ -1,311 +1,286 @@
+// D:\tudulu\apps\web\app\jobs\page.tsx
 "use client";
 
-import { useState, useMemo } from "react";
-import {
-  MOCK_JOB_OPPORTUNITIES,
-  AVAILABLE_JOB_TYPES,
-  AVAILABLE_EXPERIENCE_LEVELS,
-} from "./data";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Briefcase,
-  Search,
   MapPin,
   Building2,
   Calendar,
-  Mail,
-  ExternalLink,
-  SlidersHorizontal,
-  X,
   ShieldCheck,
-  ChevronRight,
+  Search,
+  ArrowRight,
 } from "lucide-react";
 
-export default function JobsDirectoryPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedJobType, setSelectedJobType] = useState("All Types");
-  const [selectedExperience, setSelectedExperience] = useState("All Levels");
-  const [verifiedOnly, setVerifiedOnly] = useState(false);
-
-  // Filter job opportunities dynamically
-  const filteredJobs = useMemo(() => {
-    return MOCK_JOB_OPPORTUNITIES.filter((job) => {
-      const matchesSearch =
-        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.organizationName
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.sector.toLowerCase().includes(searchQuery.toLowerCase());
-
-      if (!matchesSearch) return false;
-
-      if (
-        selectedJobType !== "All Types" &&
-        job.employmentType !== selectedJobType
-      ) {
-        return false;
-      }
-
-      if (
-        selectedExperience !== "All Levels" &&
-        job.experienceLevel !== selectedExperience
-      ) {
-        return false;
-      }
-
-      if (verifiedOnly && !job.verified) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [searchQuery, selectedJobType, selectedExperience, verifiedOnly]);
-
-  const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedJobType("All Types");
-    setSelectedExperience("All Levels");
-    setVerifiedOnly(false);
+interface JobOpportunity {
+  id: string;
+  slug: string;
+  title: string;
+  organization?: {
+    name: string;
+    logo?: string;
   };
+  organizationName?: string;
+  organizationLogo?: string;
+  verified: boolean;
+  employmentType: string;
+  experienceLevel: string;
+  location: string;
+  sector?: {
+    name: string;
+  };
+  sectorName?: string;
+  deadline?: string;
+  summary?: string;
+  type?: string;
+}
+
+export default function JobsDirectoryPage() {
+  const [jobs, setJobs] = useState<JobOpportunity[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedSector, setSelectedSector] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
+
+  useEffect(() => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    fetch(`${apiUrl}/jobs`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          throw new Error(
+            `Received HTML instead of JSON from ${apiUrl}/jobs. Ensure NestJS backend is running on port 3001 and /jobs route is active. Preview: ${text.substring(0, 80)}`,
+          );
+        }
+        if (!res.ok)
+          throw new Error("Failed to fetch jobs from backend server.");
+        return res.json();
+      })
+      .then((data) => {
+        let list: any[] = [];
+        if (Array.isArray(data)) {
+          list = data;
+        } else if (data && typeof data === "object") {
+          list = data.jobs || data.data || data.items || data.results || [];
+        }
+
+        if (!Array.isArray(list)) {
+          throw new Error(
+            `API returned invalid payload format. Expected an array of jobs.`,
+          );
+        }
+
+        setJobs(list);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredJobs = jobs.filter((item) => {
+    const orgName = item.organization?.name || item.organizationName || "";
+    const secName = item.sector?.name || item.sectorName || "";
+    const typeVal = item.employmentType || item.type || "";
+
+    const matchesSearch =
+      (item.title?.toLowerCase() || "").includes(searchQuery.toLowerCase()) ||
+      orgName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.location?.toLowerCase() || "").includes(searchQuery.toLowerCase());
+
+    const matchesSector =
+      selectedSector === "all" ||
+      secName.toLowerCase() === selectedSector.toLowerCase();
+    const matchesType =
+      selectedType === "all" ||
+      typeVal.toLowerCase() === selectedType.toLowerCase();
+
+    return matchesSearch && matchesSector && matchesType;
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="mb-8 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold mb-3">
-              <Briefcase className="w-3.5 h-3.5" /> Africa Development
-              Intelligence Database
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Development & NGO Job Board
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
+          <div className="max-w-2xl">
+            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md mb-3 inline-block">
+              Jobs & Opportunities Directory
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+              Explore Active Positions & RFPs
             </h1>
-            <p className="mt-2 text-base text-slate-600 max-w-2xl">
-              Explore open positions, consultancies, and technical roles across
-              leading international NGOs, foundations, and development agencies
-              in Africa.
+            <p className="text-slate-600 text-sm leading-relaxed">
+              Browse professional engineering, biomedical, field operations, and
+              technical software development postings.
             </p>
           </div>
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
-            <span className="block text-2xl font-bold text-emerald-600">
-              {filteredJobs.length}
-            </span>
-            <span className="text-xs text-slate-500 uppercase tracking-wider font-medium">
-              Active Opportunities
-            </span>
-          </div>
-        </div>
 
-        {/* Search & Control Bar */}
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-8">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            {/* Search Input */}
-            <div className="relative flex-1 w-full">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          {/* Search & Filters */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="relative sm:col-span-1">
+              <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
               <input
                 type="text"
+                placeholder="Search title, organization..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by role, organization, country, or keyword..."
-                className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all text-sm"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all"
               />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
             </div>
 
-            {/* Quick Filters */}
-            <div className="flex flex-wrap gap-3 w-full md:w-auto">
+            <div className="relative sm:col-span-1">
               <select
-                value={selectedJobType}
-                onChange={(e) => setSelectedJobType(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                value={selectedSector}
+                onChange={(e) => setSelectedSector(e.target.value)}
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all"
               >
-                {AVAILABLE_JOB_TYPES.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-
-              <select
-                value={selectedExperience}
-                onChange={(e) => setSelectedExperience(e.target.value)}
-                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl px-3 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              >
-                {AVAILABLE_EXPERIENCE_LEVELS.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
+                <option value="all">All Sectors</option>
+                <option value="Health">Health & Biomedical</option>
+                <option value="Engineering">Engineering & Software</option>
+                <option value="Logistics">Logistics & Non-Profit</option>
               </select>
             </div>
-          </div>
 
-          {/* Secondary Control Row */}
-          <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2 text-xs font-medium text-slate-700 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200">
-                <input
-                  type="checkbox"
-                  checked={verifiedOnly}
-                  onChange={(e) => setVerifiedOnly(e.target.checked)}
-                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4"
-                />
-                Verified Opportunities Only
-              </label>
-            </div>
-
-            {(selectedJobType !== "All Types" ||
-              selectedExperience !== "All Levels" ||
-              searchQuery !== "" ||
-              verifiedOnly) && (
-              <button
-                onClick={clearFilters}
-                className="text-xs font-semibold text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition-colors"
+            <div className="relative sm:col-span-1">
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 transition-all"
               >
-                <X className="w-3.5 h-3.5" /> Reset all filters
-              </button>
-            )}
+                <option value="all">All Types</option>
+                <option value="Full-Time">Full-Time</option>
+                <option value="Contract">Contract / RFP</option>
+                <option value="Grant">Grant</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Jobs Feed / List */}
-        {filteredJobs.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-sm">
-            <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-800">
-              No active job opportunities found
-            </h3>
-            <p className="text-sm text-slate-500 mt-1">
-              Try modifying your search criteria or clearing active filters.
+        {/* Results Counter */}
+        <div className="flex items-center justify-between mb-4 px-2">
+          <p className="text-xs font-semibold text-slate-500">
+            Active Listings:{" "}
+            <span className="text-slate-800">{filteredJobs.length}</span>
+          </p>
+        </div>
+
+        {/* Listings List */}
+        {loading ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 text-sm font-medium shadow-sm">
+            Loading job directory...
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 rounded-2xl border border-red-200 p-8 text-center text-red-700 text-xs shadow-sm">
+            <p className="font-bold text-sm mb-1">
+              Failed to Connect to Jobs Server
             </p>
-            <button
-              onClick={clearFilters}
-              className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-xl text-sm font-medium hover:bg-emerald-700 transition-colors"
-            >
-              Clear Filters
-            </button>
+            <p className="font-mono bg-red-100 p-2 rounded inline-block mt-2">
+              {error}
+            </p>
+          </div>
+        ) : filteredJobs.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center shadow-sm">
+            <Briefcase className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-slate-800 mb-1">
+              No job positions found
+            </h3>
+            <p className="text-xs text-slate-500">
+              Try adjusting your search filters or check back later for new
+              postings.
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
-            {filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-6 group"
-              >
-                {/* Left: Org Logo & Job Summary */}
-                <div className="flex items-start gap-4 flex-1">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 font-bold text-slate-700">
-                    {job.organizationLogo ? (
-                      <img
-                        src={job.organizationLogo}
-                        alt={job.organizationName}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span>
-                        {job.organizationName.substring(0, 2).toUpperCase()}
-                      </span>
-                    )}
-                  </div>
+            {filteredJobs.map((item) => {
+              const orgName =
+                item.organization?.name ||
+                item.organizationName ||
+                "Organization";
+              const orgLogo = item.organization?.logo || item.organizationLogo;
+              const secName = item.sector?.name || item.sectorName || "General";
+              const deadlineStr = item.deadline
+                ? new Date(item.deadline).toLocaleDateString()
+                : "Open";
+              const employmentType =
+                item.employmentType || item.type || "Full-Time";
+              const targetRoute = `/jobs/${item.slug || item.id}`;
 
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">
-                        {job.organizationName}
-                      </span>
-                      {job.verified && (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />{" "}
-                          Verified Listing
-                        </span>
+              return (
+                <Link
+                  key={item.id || item.slug}
+                  href={targetRoute}
+                  className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:border-emerald-500/50 hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 font-bold text-slate-700 text-sm">
+                      {orgLogo ? (
+                        <img
+                          src={orgLogo}
+                          alt={orgName}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span>{orgName.substring(0, 2).toUpperCase()}</span>
                       )}
-                      <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-md">
-                        {job.employmentType}
-                      </span>
-                      <span className="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-md">
-                        {job.experienceLevel}
-                      </span>
                     </div>
 
-                    <Link href={`/jobs/${job.id}`}>
-                      <h2 className="text-xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                        {job.title}
-                      </h2>
-                    </Link>
-
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 mt-2">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400" />{" "}
-                        {job.location} ({job.country})
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Building2 className="w-3.5 h-3.5 text-slate-400" />{" "}
-                        Sector: {job.sector}
-                      </span>
-                      <span className="flex items-center gap-1 text-amber-700 font-medium">
-                        <Calendar className="w-3.5 h-3.5 text-amber-500" />{" "}
-                        Deadline: {job.deadline}
-                      </span>
-                    </div>
-
-                    <p className="text-sm text-slate-600 mt-3 line-clamp-2">
-                      {job.description}
-                    </p>
-
-                    {/* Qualifications preview */}
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      {job.qualifications.slice(0, 2).map((qual, idx) => (
-                        <span
-                          key={idx}
-                          className="text-[11px] bg-slate-50 border border-slate-200 text-slate-600 px-2 py-0.5 rounded"
-                        >
-                          ✓ {qual}
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                        <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded">
+                          {orgName}
                         </span>
-                      ))}
+                        {item.verified && (
+                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />{" "}
+                            Verified
+                          </span>
+                        )}
+                        <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                          {employmentType}
+                        </span>
+                      </div>
+
+                      <h2 className="text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors mb-2">
+                        {item.title}
+                      </h2>
+
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 font-medium">
+                        {item.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400" />{" "}
+                            {item.location}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-1">
+                          <Building2 className="w-3.5 h-3.5 text-slate-400" />{" "}
+                          {secName}
+                        </span>
+                        <span className="flex items-center gap-1 text-amber-700 font-semibold">
+                          <Calendar className="w-3.5 h-3.5 text-amber-500" />{" "}
+                          Due: {deadlineStr}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Right: Actions */}
-                <div className="flex flex-col sm:flex-row md:flex-col items-stretch sm:items-center md:items-end justify-center gap-3 shrink-0 pt-4 md:pt-0 border-t md:border-t-0 border-slate-100">
-                  <Link
-                    href={`/jobs/${job.id}`}
-                    className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold transition-all text-center"
-                  >
-                    View Details <ChevronRight className="w-3.5 h-3.5" />
-                  </Link>
-                  {job.applicationEmail && (
-                    <a
-                      href={`mailto:${job.applicationEmail}?subject=Application for ${job.title}`}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all text-center"
-                    >
-                      <Mail className="w-3.5 h-3.5" /> Apply via Email
-                    </a>
-                  )}
-                  {job.applicationUrl && (
-                    <a
-                      href={job.applicationUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold shadow-sm transition-all text-center"
-                    >
-                      External Link <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
+                  <div className="shrink-0 flex items-center justify-end">
+                    <span className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-slate-900 group-hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all shadow-sm">
+                      View Position <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

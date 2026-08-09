@@ -17,6 +17,7 @@ export function Footer() {
   const companyLinks = [
     { name: "About Us", href: "/about" },
     { name: "Contact & Inquiries", href: "/contact" },
+    { name: "Sign In", href: "/auth/login" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
   ];
@@ -84,7 +85,7 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Social Icons */}
+          {/* Social Icons with Full Brand Colors by Default */}
           <div className="space-y-3">
             <h4 className="font-bold text-slate-900 dark:text-slate-200 uppercase tracking-wider text-[11px]">
               Follow Us
@@ -97,7 +98,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Tudulu on LinkedIn"
-                className="text-slate-400 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+                className="text-[#0A66C2] hover:opacity-80 transition-opacity"
               >
                 <svg
                   className="w-5 h-5 fill-current"
@@ -114,7 +115,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Tudulu on X"
-                className="text-slate-400 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+                className="text-slate-900 dark:text-white hover:opacity-80 transition-opacity"
               >
                 <svg
                   className="w-5 h-5 fill-current"
@@ -131,7 +132,7 @@ export function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Tudulu on TikTok"
-                className="text-slate-400 hover:text-green-700 dark:hover:text-green-400 transition-colors"
+                className="text-[#FE2C55] hover:opacity-80 transition-opacity"
               >
                 <svg
                   className="w-5 h-5 fill-current"

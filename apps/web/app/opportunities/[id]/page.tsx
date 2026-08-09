@@ -1,197 +1,278 @@
 // D:\tudulu\apps\web\app\opportunities\[id]\page.tsx
+"use client";
 
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
-import { opportunitiesData } from "../data";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
-import { Button } from "@/components/ui/Button";
+import {
+  Briefcase,
+  MapPin,
+  Building2,
+  Calendar,
+  ShieldCheck,
+  ArrowLeft,
+  ArrowRight,
+  Globe,
+} from "lucide-react";
 
-interface Props {
-  params: Promise<{ id: string }>;
+interface JobDetail {
+  id: string;
+  slug: string;
+  title: string;
+  organization?: {
+    name: string;
+    logo?: string;
+  };
+  organizationName?: string;
+  organizationLogo?: string;
+  verified: boolean;
+  employmentType: string;
+  experienceLevel: string;
+  location: string;
+  sector?: {
+    name: string;
+  };
+  sectorName?: string;
+  deadline?: string;
+  applicationUrl?: string;
+  applicationEmail?: string;
+  summary?: string;
+  description?: string;
+  requirements?: string[];
+  type?: string;
 }
 
-export async function generateStaticParams() {
-  return opportunitiesData.map((item) => ({
-    id: item.id,
-  }));
-}
+export default function OpportunityDetailPage() {
+  const params = useParams();
+  const id = params?.id as string;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const opp = opportunitiesData.find((item) => item.id === id);
+  const [job, setJob] = useState<JobDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!opp) {
-    return { title: "Opportunity Not Found | Tudulu" };
+  useEffect(() => {
+    if (!id) return;
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    fetch(`${apiUrl}/jobs/${id}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          throw new Error(
+            `Received HTML instead of JSON from ${apiUrl}/jobs/${id}. Ensure NestJS backend is running on port 3001 and /jobs/:id route is active. Preview: ${text.substring(0, 80)}`,
+          );
+        }
+        if (!res.ok)
+          throw new Error(
+            "Failed to fetch opportunity details from backend server.",
+          );
+        return res.json();
+      })
+      .then((data) => {
+        setJob(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-16 px-4 text-center text-slate-500 text-sm font-medium">
+        Loading opportunity details...
+      </div>
+    );
   }
 
-  return {
-    title: `${opp.title} | Tudulu Impact Opportunities`,
-    description: opp.description,
-  };
-}
-
-export default async function OpportunityDetailPage({ params }: Props) {
-  const { id } = await params;
-  const opp = opportunitiesData.find((item) => item.id === id);
-
-  if (!opp) {
-    notFound();
+  if (error || !job) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-16 px-4">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-8 text-center shadow-sm">
+          <Briefcase className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <h1 className="text-lg font-bold text-slate-800 mb-2">
+            Position Not Found
+          </h1>
+          <p className="text-xs text-slate-500 mb-6 font-mono">
+            {error || "The requested opportunity could not be located."}
+          </p>
+          <Link
+            href="/opportunities"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to Opportunities Board
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  const categoryVariantMap: Record<
-    string,
-    "emerald" | "amber" | "blue" | "default"
-  > = {
-    HealthTech: "emerald",
-    "Energy Resilience": "amber",
-    "Youth & Sports": "blue",
-    "Digital Tech": "default",
-  };
+  const orgName =
+    job.organization?.name || job.organizationName || "Organization";
+  const orgLogo = job.organization?.logo || job.organizationLogo;
+  const secName = job.sector?.name || job.sectorName || "General";
+  const deadlineStr = job.deadline
+    ? new Date(job.deadline).toLocaleDateString()
+    : "Open";
+  const applyUrl =
+    job.applicationUrl ||
+    (job.applicationEmail ? `mailto:${job.applicationEmail}` : null);
 
   return (
-    <div className="min-h-screen bg-[var(--td-bg-canvas,#F8FAFC)] text-[var(--td-text-primary,#0F172A)] flex flex-col font-sans selection:bg-sky-500 selection:text-white">
-      <main className="flex-1">
-        <Section spacing="lg" className="bg-white border-b border-slate-200">
-          <Container size="md">
-            {/* Breadcrumb Back Link */}
-            <div className="mb-6">
-              <Link
-                href="/opportunities"
-                className="text-xs font-semibold text-sky-600 hover:text-sky-700 transition-colors inline-flex items-center space-x-1"
-              >
-                <span>&larr;</span>
-                <span>Back to All Opportunities</span>
-              </Link>
+    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        {/* Back Navigation */}
+        <div className="mb-6">
+          <Link
+            href="/opportunities"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to Opportunities Board
+          </Link>
+        </div>
+
+        {/* Main Details Container */}
+        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+            <div className="flex items-start gap-4">
+              <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 font-bold text-slate-700 text-base">
+                {orgLogo ? (
+                  <img
+                    src={orgLogo}
+                    alt={orgName}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>{orgName.substring(0, 2).toUpperCase()}</span>
+                )}
+              </div>
+
+              <div>
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded">
+                    {orgName}
+                  </span>
+                  {job.verified && (
+                    <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />{" "}
+                      Verified
+                    </span>
+                  )}
+                  <span className="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                    {job.employmentType || job.type}
+                  </span>
+                </div>
+
+                <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                  {job.title}
+                </h1>
+              </div>
             </div>
 
-            {/* Opportunity Header */}
-            <header className="space-y-4 border-b border-slate-200 pb-8">
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                <Badge variant={categoryVariantMap[opp.category] || "default"}>
-                  {opp.category}
-                </Badge>
-                <Badge variant="outline">{opp.type}</Badge>
-                <span className="text-slate-300">•</span>
-                <span className="text-slate-500 font-medium">
-                  Deadline: {opp.deadline}
+            <div>
+              {applyUrl ? (
+                <a
+                  href={applyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-sm transition-all"
+                >
+                  Apply Now <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              ) : (
+                <span className="text-xs font-medium text-slate-400 bg-slate-100 px-4 py-3 rounded-xl block text-center">
+                  Application Unavailable
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Meta Information Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 py-6 border-b border-slate-100 text-xs text-slate-600">
+            {job.location && (
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                <div>
+                  <span className="block font-medium text-slate-400 text-[10px]">
+                    Location
+                  </span>
+                  <span className="font-semibold text-slate-800">
+                    {job.location}
+                  </span>
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-2">
+              <Building2 className="w-4 h-4 text-slate-400 shrink-0" />
+              <div>
+                <span className="block font-medium text-slate-400 text-[10px]">
+                  Sector
+                </span>
+                <span className="font-semibold text-slate-800">{secName}</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-amber-500 shrink-0" />
+              <div>
+                <span className="block font-medium text-slate-400 text-[10px]">
+                  Deadline
+                </span>
+                <span className="font-semibold text-amber-700">
+                  {deadlineStr}
                 </span>
               </div>
+            </div>
+          </div>
 
-              <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
-                {opp.title}
-              </h1>
-
-              <div className="flex flex-wrap items-center gap-6 pt-2 text-sm font-semibold text-slate-700">
-                <div>
-                  <span className="text-slate-400 font-normal text-xs block uppercase tracking-wider">
-                    Funding / Value
-                  </span>
-                  <span className="text-sky-600 text-lg sm:text-xl font-bold">
-                    {opp.amount}
-                  </span>
-                </div>
-                <div className="h-8 w-px bg-slate-200 hidden sm:block" />
-                <div>
-                  <span className="text-slate-400 font-normal text-xs block uppercase tracking-wider">
-                    Target Beneficiaries
-                  </span>
-                  <span>{opp.target}</span>
-                </div>
+          {/* Summary / Description */}
+          <div className="py-6 space-y-4">
+            {job.summary && (
+              <div>
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
+                  Summary
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                  {job.summary}
+                </p>
               </div>
+            )}
 
-              <p className="text-slate-600 text-base sm:text-lg leading-relaxed pt-4 border-l-2 border-sky-500 pl-4">
-                {opp.description}
-              </p>
-            </header>
-
-            {/* Details Grid */}
-            <div className="pt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Main Content: Eligibility & Application Steps */}
-              <div className="md:col-span-2 space-y-8">
-                {/* Eligibility Criteria */}
-                <Card className="p-6 bg-slate-50 border border-slate-200">
-                  <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">
-                    Eligibility Criteria
-                  </h2>
-                  <ul className="space-y-2.5 text-sm text-slate-700">
-                    {opp.eligibility?.map((criterion, idx) => (
-                      <li key={idx} className="flex items-start gap-2.5">
-                        <span className="text-sky-600 font-bold shrink-0">
-                          ✓
-                        </span>
-                        <span>{criterion}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </Card>
-
-                {/* Application Steps */}
-                <div>
-                  <h2 className="text-lg font-bold text-slate-900 mb-4">
-                    Application Process
-                  </h2>
-                  <div className="space-y-4">
-                    {opp.applicationSteps?.map((step, idx) => (
-                      <Card key={idx} className="p-5 flex items-start gap-4">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-extrabold text-sm shrink-0">
-                          {idx + 1}
-                        </div>
-                        <p className="text-sm text-slate-700 leading-relaxed pt-1">
-                          {step}
-                        </p>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Sidebar: Key Dates & Apply Action */}
-              <div className="space-y-6">
-                <Card className="p-6 bg-white border border-slate-200 space-y-6">
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">
-                      Key Timeline & Dates
-                    </h3>
-                    <div className="space-y-3">
-                      {opp.keyDates?.map((item, idx) => (
-                        <div
-                          key={idx}
-                          className="flex justify-between items-center text-xs pb-2 border-b border-slate-100 last:border-0 last:pb-0"
-                        >
-                          <span className="text-slate-600">{item.label}</span>
-                          <span className="font-bold text-slate-900">
-                            {item.date}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-slate-200 space-y-3">
-                    <a
-                      href={`mailto:${opp.contactEmail}?subject=Application: ${encodeURIComponent(
-                        opp.title,
-                      )}`}
-                      className="block w-full"
-                    >
-                      <Button variant="primary" size="lg" className="w-full">
-                        Submit Proposal
-                      </Button>
-                    </a>
-                    <p className="text-[11px] text-center text-slate-400">
-                      Direct contact: {opp.contactEmail}
-                    </p>
-                  </div>
-                </Card>
+            <div>
+              <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
+                Role Overview & Details
+              </h3>
+              <div className="prose prose-slate max-w-none text-xs sm:text-sm text-slate-800 leading-relaxed space-y-3">
+                {job.description ? (
+                  <div dangerouslySetInnerHTML={{ __html: job.description }} />
+                ) : (
+                  <p className="text-slate-500 italic">
+                    No extended description provided for this listing.
+                  </p>
+                )}
               </div>
             </div>
-          </Container>
-        </Section>
-      </main>
+
+            {job.requirements && job.requirements.length > 0 && (
+              <div className="pt-4">
+                <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2">
+                  Key Requirements
+                </h3>
+                <ul className="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-slate-700">
+                  {job.requirements.map((req, idx) => (
+                    <li key={idx}>{req}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ export function CTA() {
         <div className="mx-auto max-w-4xl text-center">
           {/* Heading */}
           <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-[var(--td-text)]">
-            Build partnerships that create
+            Build partnerships that create lasting impact across Africa
           </h2>
 
           {/* Description */}

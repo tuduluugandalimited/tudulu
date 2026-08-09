@@ -181,8 +181,14 @@ export function Navbar() {
             </Link>
           </nav>
 
-          {/* Primary Action Button */}
+          {/* Primary Action Buttons & Sign In */}
           <div className="hidden md:flex items-center space-x-3">
+            <Link
+              href="/auth/login"
+              className="text-xs font-semibold text-[var(--td-text-muted)] hover:text-[var(--td-color-primary)] transition-colors px-2.5 py-1.5"
+            >
+              Sign In
+            </Link>
             <Link
               href="/contact"
               className="inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-bold text-[var(--td-text-inverse)] bg-[var(--td-color-primary)] hover:opacity-90 transition-all shadow-xs hover:shadow-md"
@@ -267,6 +273,23 @@ export function Navbar() {
 
           {/* Navigation Links List */}
           <nav className="flex flex-col space-y-1 font-medium text-[var(--td-text)]">
+            <Link
+              href="/opportunities"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-3 py-2.5 rounded-lg text-sm text-[var(--td-color-primary)] font-bold hover:bg-[var(--td-bg-soft)] transition-colors flex items-center gap-2"
+            >
+              <span className="h-2 w-2 rounded-full bg-[var(--td-color-primary)]" />
+              Grants & Opportunities
+            </Link>
+
+            <Link
+              href="/news"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="px-3 py-2.5 rounded-lg text-sm hover:bg-[var(--td-bg-soft)] hover:text-[var(--td-color-primary)] transition-colors"
+            >
+              News & Intelligence
+            </Link>
+
             <div className="pt-2 pb-1 border-t border-[var(--td-border-subtle)] my-1">
               <span className="px-3 text-[10px] font-bold uppercase text-[var(--td-text-muted)] tracking-wider">
                 Ecosystem Directory
@@ -291,13 +314,20 @@ export function Navbar() {
               About
             </Link>
 
-            <div className="pt-3">
+            <div className="pt-3 space-y-2">
               <Link
                 href="/contact"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full text-center px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--td-text-inverse)] bg-[var(--td-color-primary)] hover:opacity-90 shadow-sm"
               >
                 Partner With Us
+              </Link>
+              <Link
+                href="/auth/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center px-4 py-2 rounded-xl text-xs font-semibold text-[var(--td-text-muted)] hover:text-[var(--td-color-primary)] hover:bg-[var(--td-bg-soft)] transition-colors"
+              >
+                Sign In
               </Link>
             </div>
           </nav>

@@ -86,7 +86,7 @@ export function FeaturedJobs() {
             <p className="mt-4 text-base sm:text-lg text-[var(--td-text-light)]">
               Discover verified vacancies from NGOs, UN agencies, donors,
               research institutions, governments, humanitarian organizations and
-              technology companies driving Africa's development.
+              technology companies driving Africa&apos;s development.
             </p>
           </div>
 

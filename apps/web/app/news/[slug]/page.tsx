@@ -1,180 +1,162 @@
+// D:\tudulu\apps\web\app\news\[slug]\page.tsx
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Metadata } from "next";
-import { newsPosts } from "../../data/news";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { Container } from "@/components/ui/Container";
-import { Section } from "@/components/ui/Section";
+import { Newspaper, Calendar, ArrowLeft, Tag, User } from "lucide-react";
 
-interface Props {
-  params: Promise<{ slug: string }>;
-}
-
-export async function generateStaticParams() {
-  return newsPosts.map((article) => ({
-    slug: article.slug,
-  }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const article = newsPosts.find(
-    (item) => item.slug === slug || item.id === slug,
-  );
-
-  if (!article) {
-    return { title: "Article Not Found | Tudulu" };
-  }
-
-  return {
-    title: `${article.title} | Tudulu News`,
-    description: article.summary,
+interface NewsArticle {
+  id: string;
+  slug: string;
+  title: string;
+  summary?: string;
+  content?: string;
+  publishedAt?: string;
+  createdAt?: string;
+  author?: {
+    name: string;
   };
+  tags?: Array<{ name: string }>;
 }
 
-export default async function NewsDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const currentIndex = newsPosts.findIndex(
-    (item) => item.slug === slug || item.id === slug,
-  );
+export default function NewsDetailPage() {
+  const params = useParams();
+  const slug = params?.slug as string;
 
-  if (currentIndex === -1) {
-    notFound();
+  const [article, setArticle] = useState<NewsArticle | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    fetch(`${apiUrl}/news/${slug}`, {
+      headers: {
+        Accept: "application/json",
+      },
+    })
+      .then(async (res) => {
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          const text = await res.text();
+          throw new Error(
+            `Received HTML instead of JSON from ${apiUrl}/news/${slug}. Ensure NestJS backend is running on port 3001 and /news/:slug route is active. Preview: ${text.substring(0, 80)}`,
+          );
+        }
+        if (!res.ok)
+          throw new Error("Failed to fetch article from backend server.");
+        return res.json();
+      })
+      .then((data) => {
+        setArticle(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-16 px-4 text-center text-slate-500 text-sm font-medium">
+        Loading article dispatch...
+      </div>
+    );
   }
 
-  const article = newsPosts[currentIndex];
-  const prevArticle = currentIndex > 0 ? newsPosts[currentIndex - 1] : null;
-  const nextArticle =
-    currentIndex < newsPosts.length - 1 ? newsPosts[currentIndex + 1] : null;
+  if (error || !article) {
+    return (
+      <div className="min-h-screen bg-slate-50 py-16 px-4">
+        <div className="max-w-3xl mx-auto bg-white rounded-2xl border border-slate-200 p-8 text-center shadow-sm">
+          <Newspaper className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <h1 className="text-lg font-bold text-slate-800 mb-2">
+            Article Not Found
+          </h1>
+          <p className="text-xs text-slate-500 mb-6 font-mono">
+            {error || "The requested dispatch could not be loaded."}
+          </p>
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to News & Intelligence
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const dateStr =
+    article.publishedAt || article.createdAt
+      ? new Date(article.publishedAt || article.createdAt!).toLocaleDateString()
+      : "Recent Dispatch";
 
   return (
-    <Section spacing="lg" className="bg-white border-b border-slate-200">
-      <Container size="md">
-        {/* Breadcrumb Back Link */}
+    <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        {/* Back Navigation */}
         <div className="mb-6">
           <Link
             href="/news"
-            className="text-xs font-semibold text-sky-600 hover:text-sky-700 transition-colors inline-flex items-center space-x-1"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-emerald-700 transition-colors bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-sm"
           >
-            <span>&larr;</span>
-            <span>Back to Latest News</span>
+            <ArrowLeft className="w-3.5 h-3.5" /> Back to News & Intelligence
           </Link>
         </div>
 
-        {/* Article Header */}
-        <header className="space-y-4 border-b border-slate-200 pb-8">
-          <div className="flex items-center space-x-3 text-xs">
-            <Badge variant="blue">{article.category}</Badge>
-            <span className="text-slate-500 font-medium">
-              {article.publishedAt}
+        {/* Main Article Container */}
+        <article className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4">
+            <span className="flex items-center gap-1 font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md">
+              <Calendar className="w-3.5 h-3.5" /> {dateStr}
             </span>
-            <span className="text-slate-300">•</span>
-            <span className="text-slate-500 font-medium">
-              {article.readingTimeMinutes} min read
-            </span>
+            {article.author?.name && (
+              <span className="flex items-center gap-1 font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-md">
+                <User className="w-3.5 h-3.5 text-slate-400" />{" "}
+                {article.author.name}
+              </span>
+            )}
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-4">
             {article.title}
           </h1>
 
-          <div className="flex items-center space-x-3 pt-2 text-xs font-medium text-slate-600">
-            <span>By {article.author.name}</span>
-            <span>•</span>
-            <span>{article.author.role}</span>
+          {article.summary && (
+            <p className="text-sm font-medium text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100 mb-6">
+              {article.summary}
+            </p>
+          )}
+
+          {/* Tags */}
+          {article.tags && article.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-6 pb-6 border-b border-slate-100">
+              {article.tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="text-xs font-medium bg-slate-100 text-slate-600 px-2.5 py-1 rounded-md flex items-center gap-1"
+                >
+                  <Tag className="w-3.5 h-3.5 text-slate-400" /> {tag.name}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Article Content */}
+          <div className="prose prose-slate max-w-none text-xs sm:text-sm text-slate-800 leading-relaxed space-y-4">
+            {article.content ? (
+              <div dangerouslySetInnerHTML={{ __html: article.content }} />
+            ) : (
+              <p className="text-slate-500 italic">
+                No additional content provided for this dispatch.
+              </p>
+            )}
           </div>
-
-          <p className="text-slate-600 text-base sm:text-lg leading-relaxed pt-4 italic border-l-2 border-sky-500 pl-4">
-            {article.summary}
-          </p>
-        </header>
-
-        {/* Article Content Body */}
-        <article className="prose prose-slate max-w-none pt-8 space-y-6 text-slate-700 text-sm sm:text-base leading-relaxed">
-          <p>
-            In primary care facilities and regional health centers across East
-            Africa, network instability and frequent power blackouts create
-            critical gaps in patient continuity of care. Standard web-first
-            electronic health record (EHR) solutions fail when connection is
-            lost, stalling clinical workflows at the point of care.
-          </p>
-
-          <h2 className="text-xl font-bold text-slate-900 pt-4">
-            Local-First Synchronisation & Resilient Caching
-          </h2>
-
-          <p>
-            To address these field realities, systems built on edge-first
-            architectures utilize local relational databases (such as SQLite or
-            IndexedDB) directly on local hardware nodes. When connectivity
-            drops, operations continue uninterrupted locally. Once connection is
-            restored, background web workers handle queue synchronization and
-            conflict resolution automatically.
-          </p>
-
-          <Card className="bg-slate-50 border border-slate-200 rounded-xl p-6 my-6">
-            <h3 className="text-xs font-bold text-sky-600 uppercase tracking-wider mb-3">
-              Key Technical Takeaways
-            </h3>
-            <ul className="list-disc list-inside space-y-2 text-xs sm:text-sm text-slate-600">
-              <li>
-                Zero-latency local reads and writes via client-side storage
-                engine.
-              </li>
-              <li>
-                Background queue sync with automatic retries and exponential
-                backoff.
-              </li>
-              <li>
-                IndexedDB PDF and report caching for continuous offline
-                printing.
-              </li>
-            </ul>
-          </Card>
-
-          <p>
-            Deploying resilient, offline-ready technology empowers clinical
-            staff and field administrators to focus on care delivery rather than
-            system uptime constraints.
-          </p>
         </article>
-
-        {/* Next / Previous Article Navigation */}
-        <div className="pt-10 mt-12 border-t border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {prevArticle ? (
-            <Link
-              href={`/news/${prevArticle.slug || prevArticle.id}`}
-              className="group p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-sky-300 transition-colors flex flex-col justify-between space-y-2"
-            >
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-sky-600 transition-colors">
-                &larr; Previous Article
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2">
-                {prevArticle.title}
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
-
-          {nextArticle ? (
-            <Link
-              href={`/news/${nextArticle.slug || nextArticle.id}`}
-              className="group p-4 bg-slate-50 border border-slate-200 rounded-xl hover:border-sky-300 transition-colors flex flex-col justify-between space-y-2 text-right sm:col-start-2"
-            >
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider group-hover:text-sky-600 transition-colors">
-                Next Article &rarr;
-              </span>
-              <span className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2">
-                {nextArticle.title}
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
-        </div>
-      </Container>
-    </Section>
+      </div>
+    </div>
   );
 }
