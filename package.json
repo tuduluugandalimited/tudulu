@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.4",
-    "@nestjs/config": "^4.0.4",
+    "@nestjs/config": "^3.3.0",
     "@prisma/client": "^7.9.1",
     "bullmq": "^5.81.3",
     "class-transformer": "^0.5.1",
