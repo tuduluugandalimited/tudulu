@@ -1,0 +1,685 @@
+// D:\tudulu\apps\api\prisma\seeds\organizations.seed.ts
+import { PrismaClient, EntityType } from "@prisma/client";
+
+export async function seedOrganizations(prisma: PrismaClient) {
+  console.log(
+    "Seeding comprehensive list of African non-governmental organizations...",
+  );
+
+  // Fetch reference countries
+  const uganda = await prisma.country.findUnique({ where: { code: "UG" } });
+  const kenya = await prisma.country.findUnique({ where: { code: "KE" } });
+  const tanzania = await prisma.country.findUnique({ where: { code: "TZ" } });
+  const rwanda = await prisma.country.findUnique({ where: { code: "RW" } });
+  const nigeria = await prisma.country.findUnique({ where: { code: "NG" } });
+  const ghana = await prisma.country.findUnique({ where: { code: "GH" } });
+  const southAfrica = await prisma.country.findUnique({
+    where: { code: "ZA" },
+  });
+  const ethiopia = await prisma.country.findUnique({ where: { code: "ET" } });
+  const senegal = await prisma.country.findUnique({ where: { code: "SN" } });
+  const zambia = await prisma.country.findUnique({ where: { code: "ZM" } });
+
+  // Fetch reference sectors
+  const healthSector = await prisma.sector.findFirst({
+    where: { slug: { contains: "health" } },
+  });
+  const climateSector = await prisma.sector.findFirst({
+    where: { slug: { contains: "climate" } },
+  });
+  const techSector = await prisma.sector.findFirst({
+    where: { slug: { contains: "tech" } },
+  });
+  const generalSector = await prisma.sector.findFirst();
+
+  const defaultCountryId = uganda?.id || "";
+  const defaultSectorId = generalSector?.id || "";
+
+  // Complete curated list of prominent African NGOs and Foundations
+  const organizations = [
+    // --- UGANDA ---
+    {
+      name: "Tudulu Uganda Limited",
+      slug: "tudulu-uganda-limited",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Platform provider and digital solutions developer specializing in robust regional technology infrastructure, grants tracking, and community empowerment in East Africa.",
+      headquarters: "Kampala, Uganda",
+      website: "https://tudulu.ug",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+    {
+      name: "Straight Talk Foundation",
+      slug: "straight-talk-foundation",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "An indigenous communication-for-development NGO specializing in adolescent health, sexual and reproductive rights, environmental protection, and social behavioral change.",
+      headquarters: "Kampala, Uganda",
+      website: "https://straighttalkfoundation.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "Ecological Christian Organisation (ECO)",
+      slug: "ecological-christian-organisation",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "An indigenous Ugandan NGO advancing sustainable development, climate-smart agriculture, nature-based solutions, and ecological justice.",
+      headquarters: "Kampala, Uganda",
+      website: "https://ecouganda.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "HEPS Uganda (Coalition for Health Promotion and Social Development)",
+      slug: "heps-uganda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A membership-based NGO advocating for health consumer rights, equitable access to essential medicines, and transparency in public health systems.",
+      headquarters: "Kampala, Uganda",
+      website: "https://www.heps.or.ug",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "Caritas Uganda",
+      slug: "caritas-uganda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "The official socio-economic development and humanitarian relief arm of the Catholic Church in Uganda, addressing poverty eradication, community livelihood, and peacebuilding.",
+      headquarters: "Kampala, Uganda",
+      website: "https://www.caritas.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "ActionAid International Uganda",
+      slug: "actionaid-international-uganda",
+      type: EntityType.INTL_NGO,
+      description:
+        "A global federation working for social justice, gender equality, and eradication of poverty by empowering people living in poverty and exclusion.",
+      headquarters: "Kampala, Uganda",
+      website: "https://uganda.actionaid.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "TPO Uganda",
+      slug: "tpo-uganda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A local non-governmental organization providing psychosocial support, mental health care, and socio-economic empowerment services to vulnerable communities and refugees.",
+      headquarters: "Kampala, Uganda",
+      website: "https://tpoug.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "Initiative for Social and Economic Rights (ISER)",
+      slug: "iser-uganda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A human rights advocacy organization promoting socio-economic rights, focusing on quality education, equitable healthcare, and fiscal human rights.",
+      headquarters: "Kampala, Uganda",
+      website: "https://iser-uganda.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Access to Information Uganda",
+      slug: "access-to-information-uganda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Civil society group promoting open government, data privacy, freedom of expression, and digital rights across East Africa.",
+      headquarters: "Kampala, Uganda",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+
+    // --- KENYA ---
+    {
+      name: "Amref Health Africa",
+      slug: "amref-health-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "Africa's largest international health NGO, partnering with communities, governments, and local organizations to deliver lasting health solutions across the continent.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://amref.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "GreenBelt Movement",
+      slug: "greenbelt-movement",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Environmental organization founded by Wangari Maathai that empowers communities, particularly women, to plant trees, combat deforestation, and advocate for environmental conservation.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://www.greenbeltmovement.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "Trademark Africa",
+      slug: "trademark-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "An aid-for-trade organization established to grow African trade by unlocking economic potential through digital and infrastructural trade corridors.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://www.trademarkafrica.com",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Kichwa Tech for Good Foundation",
+      slug: "kichwa-tech-foundation",
+      type: EntityType.FOUNDATION,
+      description:
+        "Philanthropic foundation supporting civic tech initiatives, open-source development, and data capacity for community-based organizations in East Africa.",
+      headquarters: "Nairobi, Kenya",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+    {
+      name: "Article 18 East Africa",
+      slug: "article-18-east-africa",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Human rights organization defending freedom of expression, media freedom, and digital safety for activists and journalists.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://www.article19.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Practical Action East Africa",
+      slug: "practical-action-east-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "International NGO that uses technology to challenge poverty, building resilient livelihoods in agriculture, energy, and urban waste management.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://practicalaction.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+
+    // --- TANZANIA ---
+    {
+      name: "Tanzania Natural Resource Forum (TNRF)",
+      slug: "tanzania-natural-resource-forum",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A network-based NGO addressing natural resource management, environmental stewardship, and sustainable community livelihoods in East Africa.",
+      headquarters: "Arusha, Tanzania",
+      website: "https://www.tnrf.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "TZ",
+      countryId: tanzania?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "HakiElimu",
+      slug: "hakielimu",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A leading Tanzanian civil society organization promoting quality basic education, open budgets, and citizen participation in public governance.",
+      headquarters: "Dar es Salaam, Tanzania",
+      website: "https://hakielimu.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "TZ",
+      countryId: tanzania?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Legal and Human Rights Centre (LHRC)",
+      slug: "lhrc-tanzania",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A prominent human rights NGO empowering citizens, monitoring human rights violations, and providing legal aid services in Tanzania.",
+      headquarters: "Dar es Salaam, Tanzania",
+      website: "https://www.humanrights.or.tz",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "TZ",
+      countryId: tanzania?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+
+    // --- RWANDA ---
+    {
+      name: "Rwanda Environment and Climate Change Organization",
+      slug: "recco-rwanda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A civil society organization dedicated to grassroots climate resilience, green economy advocacy, and environmental education.",
+      headquarters: "Kigali, Rwanda",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "RW",
+      countryId: rwanda?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "Profdeme Rwanda",
+      slug: "profdeme-rwanda",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Local non-profit organization promoting community development, public health awareness, and gender equality in rural Rwanda.",
+      headquarters: "Kigali, Rwanda",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "RW",
+      countryId: rwanda?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+
+    // --- NIGERIA ---
+    {
+      name: "BudgIT Foundation",
+      slug: "budgit-foundation",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A civic organization applying technology to simplify public spending, institutionalize transparency, and track government budgets across West Africa.",
+      headquarters: "Lagos, Nigeria",
+      website: "https://yourbudgit.com",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "NG",
+      countryId: nigeria?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+    {
+      name: "Connected Development (CODE)",
+      slug: "connected-development",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A non-profit civil society organization that empowers marginalized communities in Africa through grassroots data tracking and open government advocacy.",
+      headquarters: "Abuja, Nigeria",
+      website: "https://connecteddevelopment.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "NG",
+      countryId: nigeria?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Nigerian Conservation Foundation (NCF)",
+      slug: "nigerian-conservation-foundation",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "The premier non-governmental environmental conservation organization in Nigeria dedicated to nature conservation and sustainable development.",
+      headquarters: "Lagos, Nigeria",
+      website: "https://ncfnigeria.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "NG",
+      countryId: nigeria?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "SERAP (Socio-Economic Rights and Accountability Project)",
+      slug: "serap-nigeria",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A non-profit human rights organization promoting transparency, accountability, and the application of international human rights standards in anti-corruption efforts.",
+      headquarters: "Lagos, Nigeria",
+      website: "https://serap-nigeria.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "NG",
+      countryId: nigeria?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+
+    // --- GHANA ---
+    {
+      name: "SEND Ghana",
+      slug: "send-ghana",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A policy research and advocacy civil society organization promoting good governance, gender equality, and livelihood security for poor communities.",
+      headquarters: "Accra, Ghana",
+      website: "https://sendwestafrica.org/gh/",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "GH",
+      countryId: ghana?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Penplusbytes",
+      slug: "penplusbytes",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A civil society organization utilizing digital technologies to drive effective governance, open data, and technology-driven accountability in Africa.",
+      headquarters: "Accra, Ghana",
+      website: "https://penplusbytes.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "GH",
+      countryId: ghana?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+    {
+      name: "ABANTU for Development",
+      slug: "abantu-for-development",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A regional women's non-governmental organization working to build gender capacity and mainstream gender policies into national and regional governance frameworks.",
+      headquarters: "Accra, Ghana",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "GH",
+      countryId: ghana?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+
+    // --- SOUTH AFRICA ---
+    {
+      name: "Treatment Action Campaign (TAC)",
+      slug: "treatment-action-campaign",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "An iconic social justice NGO that campaigns for equal access to healthcare, treatment for HIV/AIDS, and the strengthening of public healthcare systems in South Africa.",
+      headquarters: "Cape Town, South Africa",
+      website: "https://tac.org.za",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ZA",
+      countryId: southAfrica?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "Equal Education",
+      slug: "equal-education",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A membership-based movement of students, parents, teachers, and community members working for quality and equality in the South African education system.",
+      headquarters: "Khayelitsha, South Africa",
+      website: "https://equaleducation.org.za",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ZA",
+      countryId: southAfrica?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Open Ownership Africa",
+      slug: "open-ownership-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "International non-profit supporting transparency reforms and beneficial ownership disclosure to fight corruption and illicit financial flows across African states.",
+      headquarters: "Johannesburg, South Africa",
+      website: "https://www.openownership.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ZA",
+      countryId: southAfrica?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+
+    // --- ETHIOPIA ---
+    {
+      name: "Organization for Social Services in AIDS (OSSA)",
+      slug: "ossa-ethiopia",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Ethiopian indigenous NGO providing community-based HIV prevention, care, support, and reproductive health services.",
+      headquarters: "Addis Ababa, Ethiopia",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ET",
+      countryId: ethiopia?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+    {
+      name: "Horn of Africa Regional Environment Center and Network (HoAREC&N)",
+      slug: "hoarecn-ethiopia",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Environmental organization focused on environmental governance, climate change mitigation, and natural resource conservation in the Horn of Africa.",
+      headquarters: "Addis Ababa, Ethiopia",
+      website: "https://www.hoarec.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ET",
+      countryId: ethiopia?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+
+    // --- SENEGAL ---
+    {
+      name: "RADDHO (African Rencontre for the Defense of Human Rights)",
+      slug: "raddho-senegal",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Pan-African human rights organization based in West Africa promoting democracy, peace, and protection of fundamental freedoms.",
+      headquarters: "Dakar, Senegal",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "SN",
+      countryId: senegal?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "ENDA Tiers Monde",
+      slug: "enda-tier-monde",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "International nongovernmental organization based in Dakar working on grassroots development, environmental justice, and socio-economic empowerment across francophone Africa.",
+      headquarters: "Dakar, Senegal",
+      website: "https://www.enda.sn",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "SN",
+      countryId: senegal?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+
+    // --- ZAMBIA ---
+    {
+      name: "Civil Society for Poverty Reduction (CSPR)",
+      slug: "cspr-zambia",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "A network of civil society organizations committed to influencing pro-poor policies and monitoring poverty reduction programs in Zambia.",
+      headquarters: "Lusaka, Zambia",
+      website: "https://www.cspr.org.zm",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ZM",
+      countryId: zambia?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Treatment Advocacy and Literacy Campaign (TALC)",
+      slug: "talc-zambia",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Community health NGO advocating for patient rights, treatment literacy, and expanded healthcare access for vulnerable populations in Zambia.",
+      headquarters: "Lusaka, Zambia",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "ZM",
+      countryId: zambia?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+
+    // --- ADDITIONAL PAN-AFRICAN & REGIONAL NGOS ---
+    {
+      name: "Femnet (African Women's Development and Communication Network)",
+      slug: "femnet-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "Pan-African feminist network working to advance women's rights, gender equality, and women's socio-economic empowerment across the continent.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://femnet.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Pan African Climate Justice Alliance (PACJA)",
+      slug: "pacja-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "A coalition of civil society organizations promoting climate and environmental justice across more than 48 African countries.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://www.pacja.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: climateSector?.id || defaultSectorId,
+    },
+    {
+      name: "Africtel Digital Rights Network",
+      slug: "africtel-digital-rights",
+      type: EntityType.LOCAL_NGO,
+      description:
+        "Regional non-profit organization advocating for open internet access, data protection regulations, and digital inclusion across Sub-Saharan Africa.",
+      headquarters: "Kampala, Uganda",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "UG",
+      countryId: uganda?.id || defaultCountryId,
+      sectorId: techSector?.id || defaultSectorId,
+    },
+    {
+      name: "African Youth Development Foundation",
+      slug: "african-youth-development-foundation",
+      type: EntityType.FOUNDATION,
+      description:
+        "Foundation fostering youth leadership, technical skills training, and entrepreneurship opportunities across African communities.",
+      headquarters: "Accra, Ghana",
+      website: "",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "GH",
+      countryId: ghana?.id || defaultCountryId,
+      sectorId: generalSector?.id || defaultSectorId,
+    },
+    {
+      name: "Health Poverty Action Africa",
+      slug: "health-poverty-action-africa",
+      type: EntityType.INTL_NGO,
+      description:
+        "International health NGO working alongside marginalized communities to tackle the root causes of poor health and healthcare inequality.",
+      headquarters: "Nairobi, Kenya",
+      website: "https://www.healthpovertyaction.org",
+      logoUrl: "",
+      isVerified: true,
+      countryCode: "KE",
+      countryId: kenya?.id || defaultCountryId,
+      sectorId: healthSector?.id || defaultSectorId,
+    },
+  ];
+
+  for (const org of organizations) {
+    // 1. Upsert the organization without nested sector relations
+    const savedOrg = await prisma.organization.upsert({
+      where: { slug: org.slug },
+      update: {
+        name: org.name,
+        slug: org.slug,
+        type: org.type as EntityType,
+        description: org.description,
+        headquarters: org.headquarters,
+        website: org.website,
+        logoUrl: org.logoUrl,
+        isVerified: org.isVerified,
+        countryCode: org.countryCode,
+        countryId: org.countryId,
+      },
+      create: {
+        name: org.name,
+        slug: org.slug,
+        type: org.type as EntityType,
+        description: org.description,
+        headquarters: org.headquarters,
+        website: org.website,
+        logoUrl: org.logoUrl,
+        isVerified: org.isVerified,
+        countryCode: org.countryCode,
+        countryId: org.countryId,
+      },
+    });
+
+    // 2. Handle the sector relation cleanly via the join table
+    if (org.sectorId) {
+      await prisma.organizationSector.deleteMany({
+        where: { organizationId: savedOrg.id },
+      });
+
+      await prisma.organizationSector.create({
+        data: {
+          organizationId: savedOrg.id,
+          sectorId: org.sectorId,
+        },
+      });
+    }
+  }
+
+  console.log(
+    "Comprehensive African non-governmental organizations successfully seeded!",
+  );
+}
