@@ -2,10 +2,10 @@ services:
   - type: web
     name: tudulu-api
     env: node
-    region: frankfurt # or your preferred region
+    region: frankfurt
     plan: free
     rootDir: apps/api
-    buildCommand: npm install --legacy-peer-deps && npx prisma generate && npm run build
+    buildCommand: npm install --prefix ../.. --legacy-peer-deps && npx prisma generate && npm run build
     startCommand: node dist/main
     envVars:
       - key: NODE_ENV
