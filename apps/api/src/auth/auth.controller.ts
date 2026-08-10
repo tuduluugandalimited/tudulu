@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { AuthService } from "./auth.service";
 import { LoginUserDto } from "../users/dto/login-user.dto";
 import { ApiTags, ApiOperation } from "@nestjs/swagger";
@@ -19,7 +20,10 @@ import { Response } from "express";
 @ApiTags("auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @Post("login")
   @HttpCode(HttpStatus.OK)
@@ -43,7 +47,9 @@ export class AuthController {
   async googleAuthRedirect(@Req() req, @Res() res: Response) {
     const authResult = await this.authService.validateGoogleUser(req.user);
 
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3001";
+    const frontendUrl =
+      this.configService.get<string>("FRONTEND_URL") || "http://localhost:3000";
+
     return res.redirect(
       `${frontendUrl}/auth/callback?token=${authResult.access_token}`,
     );
