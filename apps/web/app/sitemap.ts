@@ -1,13 +1,9 @@
 import { MetadataRoute } from "next";
 
-// Safely cast or mock articles so Next.js build never crashes
-const articlesList: Array<{ id: string }> = [];
-
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://tudulu.org";
 
-  // Static core routes
-  const staticRoutes: MetadataRoute.Sitemap = [
+  return [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -24,19 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/opportunities`,
       lastModified: new Date(),
       changeFrequency: "daily",
-      priority: 0.9,
+      priority: 0.8,
     },
   ];
-
-  // Dynamic news article routes
-  const newsRoutes: MetadataRoute.Sitemap = (
-    Array.isArray(articlesList) ? articlesList : []
-  ).map((article) => ({
-    url: `${baseUrl}/news/${article.id}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly",
-    priority: 0.8,
-  }));
-
-  return [...staticRoutes, ...newsRoutes];
 }
