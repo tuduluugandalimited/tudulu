@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
-import { articles } from "./news/page";
+// import { articles } from "./news/page";
+import articles from "./news/page";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://tudulu.org";
