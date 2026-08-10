@@ -51,4 +51,5 @@ dist/
 
 # Build & dependencies
 node_modules
-dist
+dist*.json
+.env*
