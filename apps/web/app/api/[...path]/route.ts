@@ -1,61 +1,90 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_BASE_URL =
-  process.env.INTERNAL_API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://tudulu-api.fly.dev/api/v1";
+// Target NestJS backend URL hosted on Fly.io
+const BACKEND_URL = process.env.BACKEND_URL || "https://tudulu-backend.fly.dev";
 
-async function proxyRequest(
+/**
+ * Helper function to handle forwarding API requests to the NestJS backend.
+ */
+async function handleProxy(
   request: NextRequest,
-  { params }: { params: { path: string[] } },
+  context: { params: Promise<{ path: string[] }> },
 ) {
   try {
-    const pathSegments = params.path || [];
-    const joinedPath = pathSegments.join("/");
+    // Next.js 15/16 async params resolution
+    const { path } = await context.params;
+    const pathString = path ? path.join("/") : "";
 
-    // Clean base URL to prevent duplicate /api/v1 prefixes
-    const cleanBase = API_BASE_URL.replace(/\/+$/, "");
-    const targetPath = joinedPath.replace(/^api\/v1\/?/, "");
+    // Retain query parameters from the incoming URL
+    const searchParams = request.nextUrl.search;
+    const targetUrl = `${BACKEND_URL}/${pathString}${searchParams}`;
 
-    // Preserve query parameters (e.g. ?sector=health&search=ngo)
-    const searchParams = request.nextUrl.searchParams.toString();
-    const targetUrl = `${cleanBase}/${targetPath}${searchParams ? `?${searchParams}` : ""}`;
-
+    // Forward original headers, stripping 'host' to avoid proxy header conflicts
     const headers = new Headers(request.headers);
     headers.delete("host");
 
-    const body = ["GET", "HEAD"].includes(request.method)
-      ? undefined
-      : await request.text();
+    // Read payload body for state-changing requests
+    let body: BodyInit | null = null;
+    if (["POST", "PUT", "PATCH"].includes(request.method)) {
+      body = await request.arrayBuffer();
+    }
 
-    const response = await fetch(targetUrl, {
+    const backendResponse = await fetch(targetUrl, {
       method: request.method,
       headers,
       body,
+      // Pass cache/credentials preferences if needed
       cache: "no-store",
     });
 
-    const data = await response.text();
+    // Mirror the backend response headers back to the client
+    const responseHeaders = new Headers(backendResponse.headers);
 
-    return new NextResponse(data, {
-      status: response.status,
-      statusText: response.statusText,
-      headers: {
-        "Content-Type":
-          response.headers.get("content-type") || "application/json",
-      },
+    return new NextResponse(backendResponse.body, {
+      status: backendResponse.status,
+      statusText: backendResponse.statusText,
+      headers: responseHeaders,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("API Proxy Error:", error);
     return NextResponse.json(
-      { error: "Failed to connect to backend service", details: error.message },
+      { error: "Internal Gateway Error proxying to backend" },
       { status: 502 },
     );
   }
 }
 
-export const GET = proxyRequest;
-export const POST = proxyRequest;
-export const PUT = proxyRequest;
-export const PATCH = proxyRequest;
-export const DELETE = proxyRequest;
+export async function GET(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
+) {
+  return handleProxy(request, context);
+}
+
+export async function POST(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
+) {
+  return handleProxy(request, context);
+}
+
+export async function PUT(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
+) {
+  return handleProxy(request, context);
+}
+
+export async function PATCH(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
+) {
+  return handleProxy(request, context);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  context: { params: Promise<{ path: string[] }> },
+) {
+  return handleProxy(request, context);
+}
