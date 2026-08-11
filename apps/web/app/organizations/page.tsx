@@ -34,9 +34,10 @@ export default function OrganizationsPage() {
   const [selectedType, setSelectedType] = useState("All");
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    // Relative endpoint relies on Next.js rewrite proxy to target Fly.io safely
+    const fetchUrl = "/api/organizations";
 
-    fetch(`${apiUrl}/organizations`, {
+    fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
       },
@@ -46,7 +47,7 @@ export default function OrganizationsPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML instead of JSON from ${apiUrl}/organizations. Ensure NestJS backend is running on port 3001 and CORS/route is active. Preview: ${text.substring(0, 80)}`,
+            `Received non-JSON response from ${fetchUrl}. Preview: ${text.substring(0, 80)}`,
           );
         }
         if (!res.ok)

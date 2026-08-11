@@ -48,8 +48,10 @@ export default function OpportunitiesPage() {
   const [selectedType, setSelectedType] = useState("all");
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    fetch(`${apiUrl}/jobs`, {
+    // Relative endpoint uses Next.js API catch-all proxy to target Fly.io safely
+    const fetchUrl = "/api/jobs";
+
+    fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
       },
@@ -59,7 +61,7 @@ export default function OpportunitiesPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML instead of JSON from ${apiUrl}/jobs. Ensure NestJS backend is running on port 3001 and /jobs route is active. Preview: ${text.substring(0, 80)}`,
+            `Received non-JSON response from ${fetchUrl}. Preview: ${text.substring(0, 80)}`,
           );
         }
         if (!res.ok)

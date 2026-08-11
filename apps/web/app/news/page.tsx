@@ -26,8 +26,10 @@ export default function NewsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    fetch(`${apiUrl}/news`, {
+    // Relative endpoint uses Next.js API catch-all proxy to target Fly.io safely
+    const fetchUrl = "/api/news";
+
+    fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
       },
@@ -37,7 +39,7 @@ export default function NewsPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML instead of JSON from ${apiUrl}/news. Ensure NestJS backend is running on port 3001 and /news route is active. Preview: ${text.substring(0, 80)}`,
+            `Received non-JSON response from ${fetchUrl}. Preview: ${text.substring(0, 80)}`,
           );
         }
         if (!res.ok)
