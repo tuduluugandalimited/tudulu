@@ -1,8 +1,5 @@
-// D:\tudulu\apps\api\prisma\schema.prisma
-
 datasource db {
   provider = "postgresql"
-  // 
 }
 
 generator client {

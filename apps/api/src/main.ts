@@ -10,11 +10,12 @@ async function bootstrap() {
     "http://192.168.1.4:3000",
     "http://localhost:3001",
     "http://192.168.1.4:3001",
-    process.env.FRONTEND_URL, // Add your production frontend domain variable here
-  ].filter(Boolean);
+    "https://tudulu-ruddy.vercel.app",
+    process.env.FRONTEND_URL,
+  ].filter(Boolean) as string[];
 
   app.enableCors({
-    origin: allowedOrigins.length > 0 ? allowedOrigins : "*",
+    origin: allowedOrigins,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
   });
@@ -29,10 +30,7 @@ async function bootstrap() {
     }),
   );
 
-  // Default to port 3000 to align with fly.toml internal_port
   const port = process.env.PORT || 3000;
-
-  // Bind to '0.0.0.0' for Docker / Fly.io container networking
   await app.listen(port, "0.0.0.0");
   console.log(`Application is running on: http://0.0.0.0:${port}`);
 }
