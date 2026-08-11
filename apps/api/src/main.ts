@@ -1,3 +1,4 @@
+// D:\tudulu\apps\api\src\main.ts
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { ValidationPipe } from "@nestjs/common";
@@ -15,7 +16,18 @@ async function bootstrap() {
   ].filter(Boolean) as string[];
 
   app.enableCors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      // Allow non-browser requests (Postman, curl, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Allow exact matches from allowedOrigins array
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+
+      // Allow any vercel deployment domain (*.vercel.app)
+      if (/\.vercel\.app$/.test(origin)) return callback(null, true);
+
+      return callback(new Error(`CORS blocked for origin: ${origin}`), false);
+    },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
     credentials: true,
   });

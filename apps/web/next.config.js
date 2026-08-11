@@ -4,7 +4,7 @@ const path = require("path");
 const BACKEND_URL =
   process.env.INTERNAL_BACKEND_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://tudulu-backend.fly.dev"; // Set fallback directly to live Fly.io endpoint
+  "https://tudulu-backend.fly.dev"; // Your actual Fly.io domain
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -24,11 +24,11 @@ const nextConfig = {
     return [
       {
         source: "/auth/:path*",
-        destination: `${BACKEND_URL}/auth/:path*`,
+        destination: `${BACKEND_URL}/api/v1/auth/:path*`,
       },
       {
         source: "/api/:path*",
-        destination: `${BACKEND_URL}/:path*`,
+        destination: `${BACKEND_URL}/api/v1/:path*`,
       },
     ];
   },
