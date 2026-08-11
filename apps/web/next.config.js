@@ -1,12 +1,15 @@
 // D:\tudulu\apps\web\next.config.js
 const path = require("path");
 
+const BACKEND_URL =
+  process.env.INTERNAL_BACKEND_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "https://tudulu-backend.fly.dev"; // Replace with your exact Fly.io app URL if different
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Fixes Turbopack path-doubling issue in Vercel monorepos
   outputFileTracingRoot: path.join(__dirname, "../../"),
   typescript: {
-    // Already verified locally via `npm run build`
     ignoreBuildErrors: false,
   },
   images: {
@@ -21,11 +24,11 @@ const nextConfig = {
     return [
       {
         source: "/auth/:path*",
-        destination: "http://localhost:3001/auth/:path*",
+        destination: `${BACKEND_URL}/auth/:path*`,
       },
       {
         source: "/api/:path*",
-        destination: "http://localhost:3001/:path*",
+        destination: `${BACKEND_URL}/:path*`,
       },
     ];
   },
