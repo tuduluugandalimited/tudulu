@@ -4,7 +4,6 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Allow cross-origin requests from Vercel frontend
   app.enableCors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
@@ -13,6 +12,8 @@ async function bootstrap() {
   const port = process.env.PORT || 3001;
 
   await app.listen(port, "0.0.0.0");
-  console.log(`Application is running on port ${port}`);
+
+  console.log(`Tudulu API running on port ${port}`);
 }
+
 bootstrap();
