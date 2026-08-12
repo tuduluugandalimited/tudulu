@@ -24,5 +24,6 @@ RUN npm run build --workspace=tudulu-api
 ENV NODE_ENV=production
 EXPOSE 3000
 
-# Start NestJS API directly
-CMD ["node", "apps/api/dist/main.js"]
+# Run the application through npm workspace or direct node from the api directory
+WORKDIR /app/apps/api
+CMD ["node", "dist/main.js"]
