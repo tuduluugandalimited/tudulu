@@ -8,21 +8,22 @@ RUN apk add --no-cache openssl
 # Copy package manifests
 COPY package*.json ./
 
-# Install dependencies (including devDependencies so @nestjs/cli works)
+# Install dependencies (including devDependencies)
 RUN npm install --legacy-peer-deps
 
 # Copy Prisma schema and generate client
 COPY prisma ./prisma
 RUN npx prisma generate
 
-# Copy source files and configuration
+# Copy source files and TypeScript build configurations
 COPY src ./src
-COPY tsconfig.json ./
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
 
-# Build NestJS output to /app/dist
+# Build NestJS output
 RUN npm run build
 
 EXPOSE 3001
 
-# Start using the package.json script
-CMD ["npm", "run", "start:prod"]
+# Fallback runner: execute main.js directly regardless of folder nesting
+CMD ["sh", "-c", "if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
