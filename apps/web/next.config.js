@@ -1,13 +1,16 @@
 // D:\tudulu\apps\web\next.config.js
 const path = require("path");
 
+const DEFAULT_BACKEND = "https://tudulu-api.onrender.com";
+
 const getBackendUrl = () => {
-  const url =
+  const envUrl =
     process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_API_URL;
-  if (!url || typeof url !== "string" || !url.trim()) {
-    return "https://tudulu-api.onrender.com";
+  if (!envUrl || typeof envUrl !== "string" || envUrl.trim() === "") {
+    return DEFAULT_BACKEND;
   }
-  return url.trim().replace(/\/$/, "");
+  const trimmed = envUrl.trim().replace(/\/$/, "");
+  return trimmed.startsWith("http") ? trimmed : DEFAULT_BACKEND;
 };
 
 const BACKEND_URL = getBackendUrl();
