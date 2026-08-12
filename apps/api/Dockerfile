@@ -1,12 +1,11 @@
 # ==========================================
-# 1. BASE STAGE (Shared Node setup)
+# 1. BASE STAGE
 # ==========================================
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 
 # Install openssl for Prisma runtime engines on Alpine
 RUN apk add --no-cache openssl
-
 
 # ==========================================
 # 2. DEPENDENCIES STAGE
@@ -14,13 +13,12 @@ RUN apk add --no-cache openssl
 FROM base AS dependencies
 WORKDIR /app
 
-# Copy root and app package manifest files for optimal caching
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY apps/web/package*.json ./apps/web/
 
-# Install ALL dependencies (including devDependencies like Next, Nest CLI, and Prisma)
-RUN npm ci
+# Install all dependencies across workspaces
+RUN npm ci --legacy-peer-deps
 
 # ==========================================
 # 3. BUILDER STAGE
@@ -28,17 +26,14 @@ RUN npm ci
 FROM base AS builder
 WORKDIR /app
 
-# Copy node_modules from dependencies stage
+# Copy all node_modules from dependencies stage
 COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules
-
-# Copy full application source
 COPY . .
 
-# Generate Prisma Client (if schema is located in apps/api/prisma/schema.prisma)
+# Generate Prisma Client
 RUN npx prisma generate --schema=apps/api/prisma/schema.prisma
 
-# Build ONLY the NestJS API workspace
+# Build the NestJS API workspace
 RUN npm run build --workspace=tudulu-api
 
 # ==========================================
@@ -49,12 +44,13 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy root package files and install ONLY production dependencies
 COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
-RUN npm ci --omit=dev --legacy-peer-deps
 
-# Copy generated Prisma engine/client and built dist folder
+# Install production dependencies for all workspaces
+RUN npm ci --omit=dev --legacy-peer-deps --workspaces
+
+# Copy built dist files, prisma schemas, and generated clients
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
@@ -62,5 +58,4 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 EXPOSE 3000
 
-# Start the NestJS API
 CMD ["node", "apps/api/dist/main.js"]
