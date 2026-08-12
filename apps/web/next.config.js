@@ -1,4 +1,4 @@
-// D:\tudulu\apps\web\next.config.js
+// apps/web/next.config.js
 const path = require("path");
 
 const rawBackend =
@@ -6,18 +6,16 @@ const rawBackend =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://tudulu-api.onrender.com";
 
-const BACKEND_URL = rawBackend.replace(/\/$/, "");
+// Ensure trailing slashes are stripped and fallback never results in empty/undefined
+const BACKEND_URL = rawBackend.trim()
+  ? rawBackend.replace(/\/$/, "")
+  : "https://tudulu-api.onrender.com";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingRoot: path.join(__dirname, "../../"),
   typescript: {
-    // Allows production builds to successfully complete even if project has type errors
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    // Allows production builds to successfully complete even if project has ESLint errors
-    ignoreDuringBuilds: true,
   },
   images: {
     remotePatterns: [
