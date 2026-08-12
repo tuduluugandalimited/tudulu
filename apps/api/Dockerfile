@@ -6,11 +6,10 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-COPY prisma ./prisma/
+COPY apps/api/prisma ./prisma/
 COPY tsconfig*.json ./
 
 RUN npm install
-
 
 COPY apps ./apps
 
@@ -26,7 +25,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 COPY package*.json ./
-COPY prisma ./prisma/
+COPY apps/api/prisma ./prisma/
 
 # Install production dependencies and generate Prisma 7 client binaries
 RUN npm install --omit=dev && npx prisma generate
