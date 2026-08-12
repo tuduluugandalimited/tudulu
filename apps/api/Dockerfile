@@ -5,7 +5,7 @@ RUN apk add --no-cache openssl
 
 # Copy package files directly for the api app
 COPY apps/api/package*.json ./
-RUN npm ci --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 
 # Copy source code and prisma schema
 COPY apps/api/prisma ./prisma
