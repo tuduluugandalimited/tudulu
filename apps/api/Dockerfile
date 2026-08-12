@@ -19,7 +19,7 @@ COPY package*.json ./
 COPY apps/api/package*.json ./apps/api/
 COPY apps/web/package*.json ./apps/web/
 
-# Install ALL dependencies (including devDependencies like Next, Nest CLI, and Prisma)
+# Install ALL dependencies across monorepo workspaces
 RUN npm ci --legacy-peer-deps
 
 
@@ -29,7 +29,7 @@ RUN npm ci --legacy-peer-deps
 FROM base AS builder
 WORKDIR /app
 
-# Copy complete project state from dependencies (preserves node_modules/.bin symlinks)
+# Copy complete project state from dependencies
 COPY --from=dependencies /app /app
 
 # Copy full application source files
@@ -47,8 +47,9 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy complete node_modules and built dist directly from builder stage
+# Copy root node_modules AND workspace-specific node_modules
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
