@@ -1,15 +1,16 @@
-// apps/web/next.config.js
+// D:\tudulu\apps\web\next.config.js
 const path = require("path");
 
-const rawBackend =
-  process.env.INTERNAL_BACKEND_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "https://tudulu-api.onrender.com";
+const getBackendUrl = () => {
+  const url =
+    process.env.INTERNAL_BACKEND_URL || process.env.NEXT_PUBLIC_API_URL;
+  if (!url || typeof url !== "string" || !url.trim()) {
+    return "https://tudulu-api.onrender.com";
+  }
+  return url.trim().replace(/\/$/, "");
+};
 
-// Ensure trailing slashes are stripped and fallback never results in empty/undefined
-const BACKEND_URL = rawBackend.trim()
-  ? rawBackend.replace(/\/$/, "")
-  : "https://tudulu-api.onrender.com";
+const BACKEND_URL = getBackendUrl();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
