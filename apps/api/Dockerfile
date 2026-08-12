@@ -5,7 +5,8 @@ FROM node:20-alpine AS base
 WORKDIR /app
 
 # Install openssl for Prisma runtime engines on Alpine
-RUN apk add --no-libc-dev openssl
+RUN apk add --no-cache openssl
+
 
 # ==========================================
 # 2. DEPENDENCIES STAGE
