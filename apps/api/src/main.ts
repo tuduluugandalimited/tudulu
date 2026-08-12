@@ -12,6 +12,8 @@ async function bootstrap() {
     "http://localhost:3001",
     "http://192.168.1.4:3001",
     "https://tudulu-ruddy.vercel.app",
+    "https://tudulu.org",
+    "https://www.tudulu.org",
     process.env.FRONTEND_URL,
   ].filter(Boolean) as string[];
 
