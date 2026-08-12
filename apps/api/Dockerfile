@@ -9,7 +9,8 @@ COPY package*.json ./
 COPY apps/api/prisma ./prisma/
 COPY tsconfig*.json ./
 
-RUN npm install
+# Bypass strict peer dependency checks
+RUN npm install --legacy-peer-deps
 
 COPY apps ./apps
 
@@ -27,8 +28,8 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY apps/api/prisma ./prisma/
 
-# Install production dependencies and generate Prisma 7 client binaries
-RUN npm install --omit=dev && npx prisma generate
+# Install production dependencies and generate Prisma binaries
+RUN npm install --omit=dev --legacy-peer-deps && npx prisma generate
 
 # Copy compiled NestJS code from builder stage
 COPY --from=builder /app/dist ./dist
