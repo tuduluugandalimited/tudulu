@@ -55,7 +55,7 @@ COPY apps/api/package*.json ./apps/api/
 RUN npm ci --omit=dev --legacy-peer-deps --workspaces
 
 # Copy generated Prisma binaries, schemas, and compiled dist files
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
@@ -63,4 +63,4 @@ COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 EXPOSE 3000
 
 # Start the NestJS API
-CMD ["node", "dist/main.js"]
+CMD ["node", "apps/api/dist/main.js"]
