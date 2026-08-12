@@ -1,59 +1,47 @@
 # ==========================================
-# 1. BASE STAGE (Shared Node setup)
+# 1. BASE STAGE
 # ==========================================
 FROM node:22-alpine AS base
 WORKDIR /app
-
-# Install openssl for Prisma runtime engines on Alpine
 RUN apk add --no-cache openssl
 
-
 # ==========================================
-# 2. DEPENDENCIES STAGE
-# ==========================================
-FROM base AS dependencies
-WORKDIR /app
-
-# Copy root and app package manifest files for optimal caching
-COPY package*.json ./
-COPY apps/api/package*.json ./apps/api/
-COPY apps/web/package*.json ./apps/web/
-
-# Install ALL dependencies across monorepo workspaces
-RUN npm ci --legacy-peer-deps
-
-
-# ==========================================
-# 3. BUILDER STAGE
+# 2. DEPENDENCIES & BUILD STAGE
 # ==========================================
 FROM base AS builder
 WORKDIR /app
 
-# Copy complete project state from dependencies
-COPY --from=dependencies /app /app
+# Copy package files
+COPY package*.json ./
+COPY apps/api/package*.json ./apps/api/
+COPY apps/web/package*.json ./apps/web/
 
-# Copy full application source files
+# Install dependencies for the monorepo
+RUN npm ci --legacy-peer-deps
+
+# Copy full application code
 COPY . .
 
-# Build ONLY the NestJS API workspace
+# Build the NestJS API
 RUN npm run build --workspace=tudulu-api
 
-
 # ==========================================
-# 4. RUNNER STAGE (Production Image)
+# 3. RUNNER STAGE
 # ==========================================
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy root node_modules AND workspace-specific node_modules
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+# Copy built artifacts and workspace config
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/apps/api/package*.json ./apps/api/
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
+# Install production dependencies directly
+RUN npm ci --omit=dev --legacy-peer-deps
+
 EXPOSE 3000
 
-# Start the NestJS API
 CMD ["node", "apps/api/dist/main.js"]
