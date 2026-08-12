@@ -1,29 +1,22 @@
-# ==========================================
-# Single Stage Build for Monorepo API
-# ==========================================
 FROM node:22-alpine
 WORKDIR /app
 
-# Install openssl required by Prisma runtime
 RUN apk add --no-cache openssl
 
-# Copy root and workspace package files
-COPY package*.json ./
-COPY apps/api/package*.json ./apps/api/
-COPY apps/web/package*.json ./apps/web/
-
-# Install ALL dependencies inside the container
+# Copy package files directly for the api app
+COPY apps/api/package*.json ./
 RUN npm ci --legacy-peer-deps
 
-# Copy full application code
-COPY . .
+# Copy source code and prisma schema
+COPY apps/api/prisma ./prisma
+COPY apps/api/src ./src
+COPY apps/api/tsconfig.json ./
 
-# Build the NestJS API workspace
-RUN npm run build --workspace=tudulu-api
+# Generate Prisma and Build NestJS
+RUN npx prisma generate
+RUN npm run build
 
 ENV NODE_ENV=production
 EXPOSE 3000
 
-# Run the application through npm workspace or direct node from the api directory
-WORKDIR /app/apps/api
 CMD ["node", "dist/main.js"]
