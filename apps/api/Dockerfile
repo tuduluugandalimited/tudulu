@@ -18,7 +18,6 @@ RUN npx prisma generate
 # Copy source files and configuration
 COPY src ./src
 COPY tsconfig.json ./
-COPY nest-cli.json ./
 
 # Build NestJS output to /app/dist
 RUN npm run build
