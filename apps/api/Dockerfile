@@ -9,7 +9,6 @@ COPY package*.json ./
 COPY apps/api/prisma ./prisma/
 COPY tsconfig*.json ./
 
-# Bypass strict peer dependency checks
 RUN npm install --legacy-peer-deps
 
 COPY apps ./apps
@@ -28,12 +27,12 @@ ENV NODE_ENV=production
 COPY package*.json ./
 COPY apps/api/prisma ./prisma/
 
-# Install production dependencies and generate Prisma binaries
 RUN npm install --omit=dev --legacy-peer-deps && npx prisma generate
 
-# Copy compiled NestJS code from builder stage
+# Copy entire dist directory from builder
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+# NestJS monorepo builds place the main entrypoint under dist/apps/api/src/main.js
+CMD ["node", "dist/apps/api/src/main.js"]
