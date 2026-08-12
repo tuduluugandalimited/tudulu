@@ -1,7 +1,8 @@
 # ==========================================
 # Single Stage Build for Monorepo API
 # ==========================================
-FROM node:22-alpine WORKDIR /app
+FROM node:22-alpine
+WORKDIR /app
 
 # Install openssl required by Prisma runtime
 RUN apk add --no-cache openssl
