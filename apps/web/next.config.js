@@ -4,7 +4,7 @@ const path = require("path");
 const rawBackend =
   process.env.INTERNAL_BACKEND_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "https://tudulu-backend.onrender.com"; // Replace with your exact Render web service URL
+  "https://tudulu-api.onrender.com";
 
 // Strip any trailing slash
 const BACKEND_URL = rawBackend.replace(/\/$/, "");
