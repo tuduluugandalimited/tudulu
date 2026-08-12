@@ -47,18 +47,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Copy package manifests for production install
-COPY package*.json ./
-COPY apps/api/package*.json ./apps/api/
-
-# Install ONLY production dependencies across workspaces
-RUN npm ci --omit=dev --legacy-peer-deps --workspaces
-
-# Copy generated Prisma binaries, schemas, and compiled dist files
+# Copy complete node_modules and built dist directly from builder stage
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
 EXPOSE 3000
 
