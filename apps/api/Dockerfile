@@ -1,23 +1,29 @@
 FROM node:22-alpine
+
 WORKDIR /app
 
+# Required by Prisma runtime engines on Alpine
 RUN apk add --no-cache openssl
 
-# Copy package files
+# Copy package manifests from apps/api
 COPY package*.json ./
+
+# Install dependencies directly inside the context
 RUN npm install --legacy-peer-deps
 
-# Copy source code and config files directly
+# Copy Prisma schema & generate client
 COPY prisma ./prisma
+RUN npx prisma generate
+
+# Copy source code and config files
 COPY src ./src
 COPY tsconfig.json ./
 COPY nest-cli.json ./
 
-# Generate Prisma and Build NestJS
-RUN npx prisma generate
+# Build NestJS output to /app/dist
 RUN npm run build
 
-ENV NODE_ENV=production
-EXPOSE 3000
+EXPOSE 3001
 
+# Start the built NestJS server
 CMD ["node", "dist/main.js"]
