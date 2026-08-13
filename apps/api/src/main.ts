@@ -1,17 +1,17 @@
+// D:\tudulu\apps\api\src\main.ts
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS for frontend communication
+  // Set the global prefix so routes match /api/v1/...
+  app.setGlobalPrefix("api/v1");
+
   app.enableCors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
   });
-
-  // Optional: Uncomment if all backend endpoints should be under /api
-  // app.setGlobalPrefix('api');
 
   const port = process.env.PORT || 3001;
 
