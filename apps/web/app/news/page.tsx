@@ -1,3 +1,4 @@
+// D:\tudulu\apps\web\app\news\page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -25,8 +26,8 @@ export default function NewsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    const fetchUrl = `${apiUrl}/news`;
+    // Relative path routes through Next.js rewrite rule -> BACKEND_URL/api/v1/news
+    const fetchUrl = "/api/news";
 
     fetch(fetchUrl, {
       headers: {

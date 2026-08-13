@@ -1,3 +1,4 @@
+// D:\tudulu\apps\web\app\news\[slug]\page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -31,9 +32,8 @@ export default function NewsDetailPage() {
   useEffect(() => {
     if (!slug) return;
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-    fetch(`${apiUrl}/news/${slug}`, {
+    // Relative endpoint routes through Next.js rewrites -> BACKEND_URL/api/v1/news/${slug}
+    fetch(`/api/news/${slug}`, {
       headers: {
         Accept: "application/json",
       },
@@ -43,7 +43,7 @@ export default function NewsDetailPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML/Non-JSON response from ${apiUrl}/news/${slug}. Check backend server on port 3001. Preview: ${text.substring(0, 80)}`,
+            `Received HTML/Non-JSON response from /api/news/${slug}. Preview: ${text.substring(0, 80)}`,
           );
         }
         if (!res.ok) {
