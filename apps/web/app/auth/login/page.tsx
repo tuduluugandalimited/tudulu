@@ -19,8 +19,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const apiUrl = "http://localhost:3001";
-      const res = await fetch(`${apiUrl}/api/v1/auth/login`, {
+      // Relative path routes through Next.js proxy rewrite -> BACKEND_URL/api/v1/auth/login
+      const res = await fetch("/api/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,21 +71,28 @@ export default function LoginPage() {
         userEmail === "tuduluugandalimited@gmail.com" ||
         userEmail.includes("admin");
 
-      // Directly target the main Admin Control Center (/admin -> D:\tudulu\apps\web\app\admin\page.tsx)
+      // Directly target the main Admin Control Center (/admin)
       if (isAdmin) {
         router.push("/admin");
       } else {
         router.push("/");
       }
     } catch (err: any) {
-      setError(err.message || "Invalid email or password. Please try again.");
+      if (err.name === "TypeError" && err.message === "Failed to fetch") {
+        setError(
+          "Unable to connect to service. The backend server may be starting up, please try again in a moment.",
+        );
+      } else {
+        setError(err.message || "Invalid email or password. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = "https://api.tudulu.org/auth/google/callback";
+    // Relative endpoint through rewrite proxy or public oauth handler
+    window.location.href = "/api/v1/auth/google";
   };
 
   return (
@@ -113,7 +120,7 @@ export default function LoginPage() {
 
         {/* Error Notification */}
         {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-3 rounded-xl text-xs">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-3 rounded-xl text-xs leading-relaxed">
             {error}
           </div>
         )}
