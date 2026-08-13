@@ -1,6 +1,7 @@
-// D:\tudulu\apps\api\src\app.module.ts
 import { Module, NestModule, MiddlewareConsumer } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
 import { PrismaModule } from "./prisma/prisma.module";
 import { AdminModule } from "./admin/admin.module";
 import { AuthModule } from "./auth/auth.module";
@@ -38,7 +39,8 @@ import { RequestIdMiddleware } from "./common/middleware/request-id.middleware";
     ContactModule,
     JobsModule,
   ],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
