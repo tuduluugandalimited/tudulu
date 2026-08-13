@@ -1,91 +1,59 @@
+// apps/web/app/api/[...path]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-// Target NestJS backend URL hosted on Render
-const BACKEND_URL = (
-  process.env.BACKEND_URL || "https://api.tudulu.org"
-).replace(/\/$/, "");
-
-/**
- * Helper function to handle forwarding API requests to the NestJS backend.
- */
-async function handleProxy(
+export async function GET(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
+  { params }: { params: { path: string[] } },
 ) {
+  const path = params.path.join("/");
+  const searchParams = request.nextUrl.searchParams.toString();
+
+  // Point to the backend route without duplicate api/v1 prefix
+  const backendUrl = `https://api.tudulu.org/${path}${searchParams ? `?${searchParams}` : ""}`;
+
   try {
-    // Next.js 15/16 async params resolution
-    const { path } = await context.params;
-    const pathString = path ? path.join("/") : "";
-
-    // Retain query parameters from the incoming URL
-    const searchParams = request.nextUrl.search;
-    const targetUrl = `${BACKEND_URL}/${pathString}${searchParams}`;
-
-    // Forward original headers, stripping 'host' to avoid proxy header conflicts
-    const headers = new Headers(request.headers);
-    headers.delete("host");
-
-    // Read payload body for state-changing requests
-    let body: BodyInit | null = null;
-    if (["POST", "PUT", "PATCH"].includes(request.method)) {
-      body = await request.arrayBuffer();
-    }
-
-    const backendResponse = await fetch(targetUrl, {
-      method: request.method,
-      headers,
-      body,
+    const res = await fetch(backendUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
       cache: "no-store",
     });
 
-    // Mirror the backend response headers back to the client
-    const responseHeaders = new Headers(backendResponse.headers);
-
-    return new NextResponse(backendResponse.body, {
-      status: backendResponse.status,
-      statusText: backendResponse.statusText,
-      headers: responseHeaders,
-    });
-  } catch (error) {
-    console.error("API Proxy Error:", error);
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Internal Gateway Error proxying to backend" },
-      { status: 502 },
+      { error: "Failed to connect to backend service" },
+      { status: 500 },
     );
   }
 }
 
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
-) {
-  return handleProxy(request, context);
-}
-
 export async function POST(
   request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
+  { params }: { params: { path: string[] } },
 ) {
-  return handleProxy(request, context);
-}
+  const path = params.path.join("/");
+  const body = await request.json();
 
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
-) {
-  return handleProxy(request, context);
-}
+  const backendUrl = `https://api.tudulu.org/${path}`;
 
-export async function PATCH(
-  request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
-) {
-  return handleProxy(request, context);
-}
+  try {
+    const res = await fetch(backendUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    });
 
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ path: string[] }> },
-) {
-  return handleProxy(request, context);
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to connect to backend service" },
+      { status: 500 },
+    );
+  }
 }
