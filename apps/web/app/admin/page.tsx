@@ -1,4 +1,3 @@
-// D:\tudulu\apps\web\app\admin\page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -42,15 +41,15 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    const apiUrl = "http://localhost:3001";
+    // Use relative paths to route through Next.js rewrite proxy
     Promise.all([
-      fetch(`${apiUrl}/api/v1/users`, {
+      fetch("/api/v1/users", {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${apiUrl}/api/v1/jobs`, {
+      fetch("/api/v1/jobs", {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => (r.ok ? r.json() : [])),
-      fetch(`${apiUrl}/api/v1/organizations`, {
+      fetch("/api/v1/organizations", {
         headers: { Authorization: `Bearer ${token}` },
       }).then((r) => (r.ok ? r.json() : [])),
     ])
@@ -270,9 +269,7 @@ export default function AdminDashboardPage() {
             <Activity className="w-4 h-4 text-emerald-500 animate-pulse" />
             <span>
               NestJS Engine API:{" "}
-              <strong className="text-[var(--td-text)]">
-                Connected (localhost:3001)
-              </strong>
+              <strong className="text-[var(--td-text)]">Connected</strong>
             </span>
           </div>
           <div className="hidden sm:flex items-center gap-2 text-[var(--td-text-muted)]">
