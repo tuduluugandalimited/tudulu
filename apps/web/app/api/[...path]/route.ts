@@ -10,21 +10,24 @@ async function proxyRequest(
   paramsPromise: { path: string[] } | Promise<{ path: string[] }>,
 ) {
   try {
-    // Resolve params whether Next.js 14 (sync) or Next.js 15 (Promise)
     const resolvedParams = await paramsPromise;
-    const pathSegments = resolvedParams.path || [];
+    let pathSegments = resolvedParams.path || [];
 
-    // Construct backend URL safely
+    // Strip leading 'v1' or 'api' segment if present to match backend route (/news)
+    if (pathSegments[0] === "v1") {
+      pathSegments = pathSegments.slice(1);
+    } else if (pathSegments[0] === "api" && pathSegments[1] === "v1") {
+      pathSegments = pathSegments.slice(2);
+    }
+
     const path = pathSegments.join("/");
     const search = request.nextUrl.search;
     const targetUrl = `${BACKEND_URL}/${path}${search}`;
 
-    // Forward incoming headers while removing host headers
     const headers = new Headers(request.headers);
     headers.delete("host");
     headers.delete("connection");
 
-    // Extract request body for non-GET/HEAD methods
     let body: any = null;
     if (request.method !== "GET" && request.method !== "HEAD") {
       try {
