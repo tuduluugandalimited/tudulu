@@ -1,4 +1,4 @@
-// D:\tudulu\apps\web\app\news\page.tsx
+// apps/web/app/news/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -26,7 +26,6 @@ export default function NewsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    // Relative endpoint uses Next.js API catch-all proxy to target Fly.io safely
     const fetchUrl = "/api/news";
 
     fetch(fetchUrl, {
@@ -36,18 +35,29 @@ export default function NewsPage() {
     })
       .then(async (res) => {
         const contentType = res.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
+        const isJson = contentType && contentType.includes("application/json");
+
+        if (!res.ok) {
+          const errorPayload = isJson ? await res.json() : null;
+          const errorMsg =
+            errorPayload?.message ||
+            errorPayload?.error ||
+            `Server responded with status ${res.status}`;
+          throw new Error(errorMsg);
+        }
+
+        if (!isJson) {
           const text = await res.text();
           throw new Error(
             `Received non-JSON response from ${fetchUrl}. Preview: ${text.substring(0, 80)}`,
           );
         }
-        if (!res.ok)
-          throw new Error("Failed to fetch news articles from backend server.");
+
         return res.json();
       })
       .then((data) => {
-        let list: any[] = [];
+        let list: NewsArticle[] = [];
+
         if (Array.isArray(data)) {
           list = data;
         } else if (data && typeof data === "object") {
@@ -56,7 +66,7 @@ export default function NewsPage() {
 
         if (!Array.isArray(list)) {
           throw new Error(
-            `API returned invalid payload format. Expected an array of articles.`,
+            "API returned invalid payload format. Expected an array of articles.",
           );
         }
 
@@ -64,26 +74,24 @@ export default function NewsPage() {
         setLoading(false);
       })
       .catch((err) => {
-        setError(err.message);
+        setError(
+          err.message || "An unexpected error occurred while fetching news.",
+        );
         setLoading(false);
       });
   }, []);
 
   const filteredArticles = articles.filter((article) => {
-    const matchesSearch =
-      (article.title?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase(),
-      ) ||
-      (article.summary?.toLowerCase() || "").includes(
-        searchQuery.toLowerCase(),
-      );
-    return matchesSearch;
+    const query = searchQuery.toLowerCase();
+    const titleMatch = (article.title?.toLowerCase() || "").includes(query);
+    const summaryMatch = (article.summary?.toLowerCase() || "").includes(query);
+    return titleMatch || summaryMatch;
   });
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Page Header */}
+        {/* Header Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
           <div className="max-w-2xl">
             <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md mb-3 inline-block">
@@ -98,7 +106,7 @@ export default function NewsPage() {
             </p>
           </div>
 
-          {/* Search Bar */}
+          {/* Search Controls */}
           <div className="mt-6 max-w-md relative">
             <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
             <input
@@ -111,7 +119,7 @@ export default function NewsPage() {
           </div>
         </div>
 
-        {/* Results Info */}
+        {/* Results Metadata */}
         <div className="flex items-center justify-between mb-4 px-2">
           <p className="text-xs font-semibold text-slate-500">
             Showing{" "}
@@ -120,7 +128,7 @@ export default function NewsPage() {
           </p>
         </div>
 
-        {/* Listings Grid */}
+        {/* Dynamic Content Grid */}
         {loading ? (
           <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 text-sm font-medium shadow-sm">
             Fetching latest intelligence reports...
@@ -146,12 +154,10 @@ export default function NewsPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredArticles.map((article) => {
-              const dateStr =
-                article.publishedAt || article.createdAt
-                  ? new Date(
-                      article.publishedAt || article.createdAt!,
-                    ).toLocaleDateString()
-                  : "Recent";
+              const rawDate = article.publishedAt || article.createdAt;
+              const dateStr = rawDate
+                ? new Date(rawDate).toLocaleDateString()
+                : "Recent";
 
               const targetRoute = `/news/${article.slug || article.id}`;
 
