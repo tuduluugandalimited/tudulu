@@ -1,59 +1,100 @@
 // apps/web/app/api/[...path]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(
+const BACKEND_URL = (
+  process.env.BACKEND_URL || "https://api.tudulu.org"
+).replace(/\/$/, "");
+
+async function proxyRequest(
   request: NextRequest,
-  { params }: { params: { path: string[] } },
+  paramsPromise: { path: string[] } | Promise<{ path: string[] }>,
 ) {
-  const path = params.path.join("/");
-  const searchParams = request.nextUrl.searchParams.toString();
-
-  // Point to the backend route without duplicate api/v1 prefix
-  const backendUrl = `https://api.tudulu.org/${path}${searchParams ? `?${searchParams}` : ""}`;
-
   try {
-    const res = await fetch(backendUrl, {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
+    // Resolve params whether Next.js 14 (sync) or Next.js 15 (Promise)
+    const resolvedParams = await paramsPromise;
+    const pathSegments = resolvedParams.path || [];
+
+    // Construct backend URL safely
+    const path = pathSegments.join("/");
+    const search = request.nextUrl.search;
+    const targetUrl = `${BACKEND_URL}/${path}${search}`;
+
+    // Forward incoming headers while removing host headers
+    const headers = new Headers(request.headers);
+    headers.delete("host");
+    headers.delete("connection");
+
+    // Extract request body for non-GET/HEAD methods
+    let body: any = null;
+    if (request.method !== "GET" && request.method !== "HEAD") {
+      try {
+        body = await request.text();
+      } catch (_) {
+        body = null;
+      }
+    }
+
+    const res = await fetch(targetUrl, {
+      method: request.method,
+      headers,
+      body: body ? body : undefined,
       cache: "no-store",
     });
 
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
+    const contentType = res.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      const data = await res.json();
+      return NextResponse.json(data, { status: res.status });
+    }
+
+    const textData = await res.text();
+    return new NextResponse(textData, {
+      status: res.status,
+      headers: { "content-type": contentType || "text/plain" },
+    });
   } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed to connect to backend service" },
-      { status: 500 },
+      {
+        error: "Failed to connect to backend service",
+        details: error?.message || "Unknown proxy error",
+      },
+      { status: 502 },
     );
   }
 }
 
+export async function GET(
+  request: NextRequest,
+  context: { params: { path: string[] } | Promise<{ path: string[] }> },
+) {
+  return proxyRequest(request, context.params);
+}
+
 export async function POST(
   request: NextRequest,
-  { params }: { params: { path: string[] } },
+  context: { params: { path: string[] } | Promise<{ path: string[] }> },
 ) {
-  const path = params.path.join("/");
-  const body = await request.json();
+  return proxyRequest(request, context.params);
+}
 
-  const backendUrl = `https://api.tudulu.org/${path}`;
+export async function PUT(
+  request: NextRequest,
+  context: { params: { path: string[] } | Promise<{ path: string[] }> },
+) {
+  return proxyRequest(request, context.params);
+}
 
-  try {
-    const res = await fetch(backendUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
+export async function DELETE(
+  request: NextRequest,
+  context: { params: { path: string[] } | Promise<{ path: string[] }> },
+) {
+  return proxyRequest(request, context.params);
+}
 
-    const data = await res.json();
-    return NextResponse.json(data, { status: res.status });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: "Failed to connect to backend service" },
-      { status: 500 },
-    );
-  }
+export async function PATCH(
+  request: NextRequest,
+  context: { params: { path: string[] } | Promise<{ path: string[] }> },
+) {
+  return proxyRequest(request, context.params);
 }
