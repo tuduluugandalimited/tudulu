@@ -1,4 +1,3 @@
-// D:\tudulu\apps\web\app\news\[slug]\page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -27,11 +26,13 @@ export default function NewsDetailPage() {
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [formattedDate, setFormattedDate] = useState<string>("");
 
   useEffect(() => {
     if (!slug) return;
 
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
     fetch(`${apiUrl}/news/${slug}`, {
       headers: {
         Accept: "application/json",
@@ -42,15 +43,22 @@ export default function NewsDetailPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML instead of JSON from ${apiUrl}/news/${slug}. Ensure NestJS backend is running on port 3001 and /news/:slug route is active. Preview: ${text.substring(0, 80)}`,
+            `Received HTML/Non-JSON response from ${apiUrl}/news/${slug}. Check backend server on port 3001. Preview: ${text.substring(0, 80)}`,
           );
         }
-        if (!res.ok)
-          throw new Error("Failed to fetch article from backend server.");
+        if (!res.ok) {
+          throw new Error(`Failed to fetch article (Status: ${res.status})`);
+        }
         return res.json();
       })
       .then((data) => {
         setArticle(data);
+        const rawDate = data?.publishedAt || data?.createdAt;
+        if (rawDate) {
+          setFormattedDate(new Date(rawDate).toLocaleDateString());
+        } else {
+          setFormattedDate("Recent Dispatch");
+        }
         setLoading(false);
       })
       .catch((err) => {
@@ -89,15 +97,9 @@ export default function NewsDetailPage() {
     );
   }
 
-  const dateStr =
-    article.publishedAt || article.createdAt
-      ? new Date(article.publishedAt || article.createdAt!).toLocaleDateString()
-      : "Recent Dispatch";
-
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        {/* Back Navigation */}
         <div className="mb-6">
           <Link
             href="/news"
@@ -107,11 +109,11 @@ export default function NewsDetailPage() {
           </Link>
         </div>
 
-        {/* Main Article Container */}
         <article className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-10 shadow-sm">
           <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 mb-4">
             <span className="flex items-center gap-1 font-medium text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md">
-              <Calendar className="w-3.5 h-3.5" /> {dateStr}
+              <Calendar className="w-3.5 h-3.5" />{" "}
+              {formattedDate || "Recent Dispatch"}
             </span>
             {article.author?.name && (
               <span className="flex items-center gap-1 font-medium text-slate-600 bg-slate-100 px-3 py-1 rounded-md">
@@ -131,7 +133,6 @@ export default function NewsDetailPage() {
             </p>
           )}
 
-          {/* Tags */}
           {article.tags && article.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6 pb-6 border-b border-slate-100">
               {article.tags.map((tag, idx) => (
@@ -145,7 +146,6 @@ export default function NewsDetailPage() {
             </div>
           )}
 
-          {/* Article Content */}
           <div className="prose prose-slate max-w-none text-xs sm:text-sm text-slate-800 leading-relaxed space-y-4">
             {article.content ? (
               <div dangerouslySetInnerHTML={{ __html: article.content }} />

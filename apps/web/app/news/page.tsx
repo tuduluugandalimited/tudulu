@@ -1,4 +1,3 @@
-// apps/web/app/news/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -26,7 +25,8 @@ export default function NewsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    const fetchUrl = "/api/news";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    const fetchUrl = `${apiUrl}/news`;
 
     fetch(fetchUrl, {
       headers: {
@@ -91,7 +91,6 @@ export default function NewsPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
-        {/* Header Section */}
         <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm mb-8">
           <div className="max-w-2xl">
             <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-md mb-3 inline-block">
@@ -106,7 +105,6 @@ export default function NewsPage() {
             </p>
           </div>
 
-          {/* Search Controls */}
           <div className="mt-6 max-w-md relative">
             <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
             <input
@@ -119,7 +117,6 @@ export default function NewsPage() {
           </div>
         </div>
 
-        {/* Results Metadata */}
         <div className="flex items-center justify-between mb-4 px-2">
           <p className="text-xs font-semibold text-slate-500">
             Showing{" "}
@@ -128,7 +125,6 @@ export default function NewsPage() {
           </p>
         </div>
 
-        {/* Dynamic Content Grid */}
         {loading ? (
           <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-500 text-sm font-medium shadow-sm">
             Fetching latest intelligence reports...
@@ -158,7 +154,6 @@ export default function NewsPage() {
               const dateStr = rawDate
                 ? new Date(rawDate).toLocaleDateString()
                 : "Recent";
-
               const targetRoute = `/news/${article.slug || article.id}`;
 
               return (
