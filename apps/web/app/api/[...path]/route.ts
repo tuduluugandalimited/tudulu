@@ -10,10 +10,11 @@ async function proxyRequest(
   paramsPromise: { path: string[] } | Promise<{ path: string[] }>,
 ) {
   try {
+    // 1. Next.js 15 requires awaiting params
     const resolvedParams = await paramsPromise;
     let pathSegments = resolvedParams.path || [];
 
-    // Strip leading 'v1' or 'api' segment if present to match backend route (/news)
+    // 2. Strip leading 'v1' or 'api' segments to match NestJS root routes
     if (pathSegments[0] === "v1") {
       pathSegments = pathSegments.slice(1);
     } else if (pathSegments[0] === "api" && pathSegments[1] === "v1") {
@@ -24,10 +25,12 @@ async function proxyRequest(
     const search = request.nextUrl.search;
     const targetUrl = `${BACKEND_URL}/${path}${search}`;
 
+    // 3. Forward request headers while stripping host headers
     const headers = new Headers(request.headers);
     headers.delete("host");
     headers.delete("connection");
 
+    // 4. Extract body for non-GET/HEAD methods
     let body: any = null;
     if (request.method !== "GET" && request.method !== "HEAD") {
       try {
