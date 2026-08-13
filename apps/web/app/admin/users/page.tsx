@@ -1,4 +1,3 @@
-// D:\tudulu\apps\web\app\admin\users\page.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -40,7 +39,7 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     const token = localStorage.getItem("accessToken");
     try {
-      const res = await fetch("http://localhost:3001/api/v1/users", {
+      const res = await fetch("/api/v1/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -85,7 +84,7 @@ export default function AdminUsersPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
     const token = localStorage.getItem("accessToken");
     try {
-      const res = await fetch(`http://localhost:3001/api/v1/users/${id}`, {
+      const res = await fetch(`/api/v1/users/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -102,7 +101,7 @@ export default function AdminUsersPage() {
     const token = localStorage.getItem("accessToken");
 
     try {
-      const res = await fetch("http://localhost:3001/api/v1/users", {
+      const res = await fetch("/api/v1/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,7 +1,6 @@
-// D:\tudulu\apps\web\app\admin\jobs\page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   Briefcase,
@@ -43,11 +42,12 @@ export default function AdminOpportunitiesPage() {
   const [newStatus, setNewStatus] = useState("ACTIVE");
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchOpportunities = async () => {
+  const fetchOpportunities = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const token = localStorage.getItem("accessToken");
-      const res = await fetch("http://localhost:3001/api/v1/jobs", {
+      const res = await fetch("/api/v1/jobs", {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (!res.ok) throw new Error("Failed to fetch opportunities directory.");
@@ -60,16 +60,16 @@ export default function AdminOpportunitiesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchOpportunities();
-  }, []);
+  }, [fetchOpportunities]);
 
   const handleToggleVerify = async (id: string, currentStatus: boolean) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(`http://localhost:3001/api/v1/jobs/${id}`, {
+      const res = await fetch(`/api/v1/jobs/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -93,11 +93,18 @@ export default function AdminOpportunitiesPage() {
     if (!confirm("Are you sure you want to remove this opportunity?")) return;
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(`http://localhost:3001/api/v1/jobs/${id}`, {
+      const res = await fetch(`/api/v1/jobs/${id}`, {
         method: "DELETE",
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
-      if (!res.ok) throw new Error("Failed to delete record.");
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errorMsg = Array.isArray(data.message)
+          ? data.message.join(", ")
+          : data.message || "Failed to delete record.";
+        throw new Error(errorMsg);
+      }
 
       setOpportunities((prev) => prev.filter((opp) => opp.id !== id));
     } catch (err: any) {
@@ -111,7 +118,7 @@ export default function AdminOpportunitiesPage() {
     const token = localStorage.getItem("accessToken");
 
     try {
-      const res = await fetch("http://localhost:3001/api/v1/jobs", {
+      const res = await fetch("/api/v1/jobs", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

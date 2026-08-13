@@ -1,4 +1,3 @@
-// D:\tudulu\apps\web\app\admin\organizations\page.tsx
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
@@ -46,7 +45,7 @@ export default function AdminOrganizationsPage() {
       setLoading(true);
       setError(null);
       const token = localStorage.getItem("accessToken");
-      const res = await fetch("http://localhost:3001/api/v1/organizations", {
+      const res = await fetch("/api/v1/organizations", {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (!res.ok) throw new Error("Failed to fetch organizations directory.");
@@ -68,17 +67,14 @@ export default function AdminOrganizationsPage() {
   const handleToggleVerify = async (id: string, currentStatus: boolean) => {
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(
-        `http://localhost:3001/api/v1/organizations/${id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ isVerified: !currentStatus }),
+      const res = await fetch(`/api/v1/organizations/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-      );
+        body: JSON.stringify({ isVerified: !currentStatus }),
+      });
       if (!res.ok) throw new Error("Failed to update verification status.");
 
       setOrganizations((prev) =>
@@ -96,13 +92,10 @@ export default function AdminOrganizationsPage() {
       return;
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await fetch(
-        `http://localhost:3001/api/v1/organizations/${id}`,
-        {
-          method: "DELETE",
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
-        },
-      );
+      const res = await fetch(`/api/v1/organizations/${id}`, {
+        method: "DELETE",
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
@@ -124,7 +117,7 @@ export default function AdminOrganizationsPage() {
     const token = localStorage.getItem("accessToken");
 
     try {
-      const res = await fetch("http://localhost:3001/api/v1/organizations", {
+      const res = await fetch("/api/v1/organizations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
