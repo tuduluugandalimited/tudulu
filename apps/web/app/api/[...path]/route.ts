@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Target NestJS backend URL hosted on Fly.io
-const BACKEND_URL = process.env.BACKEND_URL || "https://tudulu-api.fly.dev/";
+// Target NestJS backend URL hosted on Render
+const BACKEND_URL = (
+  process.env.BACKEND_URL || "https://api.tudulu.org"
+).replace(/\/$/, "");
 
 /**
  * Helper function to handle forwarding API requests to the NestJS backend.
@@ -33,7 +35,6 @@ async function handleProxy(
       method: request.method,
       headers,
       body,
-      // Pass cache/credentials preferences if needed
       cache: "no-store",
     });
 
