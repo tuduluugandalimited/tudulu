@@ -1,17 +1,21 @@
 FROM node:22-alpine
 WORKDIR /app
+
 RUN apk add --no-cache openssl
 
-COPY package*.json ./
+# Copy package manifests from apps/api
+COPY apps/api/package*.json ./
 RUN npm install --legacy-peer-deps
 
-COPY prisma ./prisma
+# Copy Prisma schema and code from apps/api
+COPY apps/api/prisma ./prisma
 RUN npx prisma generate
 
-COPY src ./src
-COPY tsconfig*.json ./
-COPY nest-cli.json ./
+COPY apps/api/src ./src
+COPY apps/api/tsconfig*.json ./
+COPY apps/api/nest-cli.json ./
 
 RUN npm run build
 EXPOSE 3001
+
 CMD ["sh", "-c", "if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
