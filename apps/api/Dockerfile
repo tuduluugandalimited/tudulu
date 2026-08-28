@@ -3,17 +3,15 @@ WORKDIR /app
 
 RUN apk add --no-cache openssl
 
-# Copy package manifests from apps/api
-COPY apps/api/package*.json ./
+COPY package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Copy Prisma schema and code from apps/api
-COPY apps/api/prisma ./prisma
+COPY prisma ./prisma
 RUN npx prisma generate
 
-COPY apps/api/src ./src
-COPY apps/api/tsconfig*.json ./
-COPY apps/api/nest-cli.json ./
+COPY src ./src
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
 
 RUN npm run build
 EXPOSE 3001
