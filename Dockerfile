@@ -5,20 +5,20 @@ WORKDIR /app
 # Required by Prisma on Alpine
 RUN apk add --no-cache openssl
 
-# Copy package manifests
-COPY package*.json ./
+# Copy root or monorepo package manifests if applicable, or target apps/api directly
+COPY apps/api/package*.json ./
 
-# Install dependencies (including devDependencies)
+# Install dependencies
 RUN npm install --legacy-peer-deps
 
-# Copy Prisma schema and generate client
-COPY prisma ./prisma
+# Copy Prisma schema from apps/api/prisma and generate client
+COPY apps/api/prisma ./prisma
 RUN npx prisma generate
 
-# Copy source files and TypeScript build configurations
-COPY src ./src
-COPY tsconfig*.json ./
-COPY nest-cli.json ./
+# Copy source files and TypeScript build configurations from apps/api
+COPY apps/api/src ./src
+COPY apps/api/tsconfig*.json ./
+COPY apps/api/nest-cli.json ./
 
 # Build NestJS output
 RUN npm run build
