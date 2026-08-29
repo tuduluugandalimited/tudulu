@@ -25,5 +25,5 @@ RUN npm run build
 
 EXPOSE 3001
 
-# Fallback runner: execute main.js directly regardless of folder nesting
-CMD ["sh", "-c", "if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
+# Updated final command in apps/api/Dockerfile
+CMD ["sh", "-c", "npx prisma db push --skip-generate && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
