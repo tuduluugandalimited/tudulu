@@ -28,4 +28,5 @@ EXPOSE 3001
 # Updated final command in apps/api/Dockerfile
 #CMD ["sh", "-c", "npx prisma db push --skip-generate && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
 #CMD ["sh", "-c", "npx prisma db push && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
-CMD ["sh", "-c", "npx prisma db push --url=\"$DATABASE_URL\" && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
+#CMD ["sh", "-c", "npx prisma db push --url=\"$DATABASE_URL\" && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
+CMD ["sh", "-c", "npx prisma db push --url=\"$DATABASE_URL\" --accept-data-loss && if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]
