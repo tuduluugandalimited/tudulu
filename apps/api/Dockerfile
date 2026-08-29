@@ -1,19 +1,29 @@
 FROM node:22-alpine
+
 WORKDIR /app
 
+# Required by Prisma on Alpine
 RUN apk add --no-cache openssl
 
+# Copy package manifests
 COPY package*.json ./
+
+# Install dependencies (including devDependencies)
 RUN npm install --legacy-peer-deps
 
+# Copy Prisma schema and generate client
 COPY prisma ./prisma
 RUN npx prisma generate
 
+# Copy source files and TypeScript build configurations
 COPY src ./src
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 
+# Build NestJS output
 RUN npm run build
+
 EXPOSE 3001
 
+# Fallback runner: execute main.js directly regardless of folder nesting
 CMD ["sh", "-c", "if [ -f dist/main.js ]; then node dist/main.js; else node dist/src/main.js; fi"]

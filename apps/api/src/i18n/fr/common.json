@@ -1,0 +1,19 @@
+{
+  "WELCOME": "Bienvenue sur Tudulu",
+  "NOT_FOUND": "La ressource demandée est introuvable.",
+  "UNAUTHORIZED": "Vous n'êtes pas autorisé à effectuer cette action.",
+  "FORBIDDEN": "Accès interdit.",
+  "INTERNAL_ERROR": "Une erreur inattendue s'est produite. Veuillez réessayer plus tard.",
+  "VALIDATION_ERROR": "La validation des données soumises a échoué.",
+  "OPPORTUNITY": {
+    "CREATED": "Opportunité créée avec succès.",
+    "UPDATED": "Opportunité mise à jour avec succès.",
+    "DELETED": "Opportunité supprimée avec succès.",
+    "EXPIRED": "Cette opportunité a expiré et n'accepte plus de candidatures."
+  },
+  "AUTH": {
+    "LOGIN_SUCCESS": "Connexion réussie.",
+    "INVALID_CREDENTIALS": "Adresse e-mail ou mot de passe incorrect.",
+    "TOKEN_EXPIRED": "Session expirée. Veuillez vous reconnecter."
+  }
+}

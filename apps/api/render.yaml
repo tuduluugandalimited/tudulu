@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: tudulu-api
+    runtime: docker
+    region: frankfurt # Change to your preferred region (e.g., oregon, singapore)
+    plan: free # Change to starter or higher if upgrading
+    dockerfilePath: apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      # Add your database / auth secrets here or connect them in Render UI:
+      # - key: DATABASE_URL
+      #   sync: false

@@ -1,0 +1,9 @@
+@import "./colors.css";
+@import "./typography.css";
+@import "./spacing.css";
+@import "./accessibility.css";
+@import "./animations.css";
+@import "./themes.css";
+
+/* Replace the old @tailwind directives with this: */
+@import "tailwindcss";
