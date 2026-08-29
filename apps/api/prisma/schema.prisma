@@ -216,9 +216,9 @@ model Organization {
   deletedAt DateTime? @map("deleted_at")
 
   // Location / Country Relation
-  countryCode String  @map("country_code")
-  countryId   String  @map("country_id")
-  country     Country @relation(fields: [countryId], references: [id], onDelete: Restrict)
+  countryCode String?  @map("country_code")
+  countryId   String?  @map("country_id")
+  country     Country? @relation(fields: [countryId], references: [id], onDelete: Restrict)
   region      String?
 
   // Relations
