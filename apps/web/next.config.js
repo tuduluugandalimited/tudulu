@@ -39,6 +39,14 @@ const nextConfig = {
         destination: `${BACKEND_URL}/api/v1/auth/register`,
       },
       {
+        source: "/auth/google",
+        destination: `${BACKEND_URL}/api/v1/auth/google`,
+      },
+      {
+        source: "/auth/google/callback",
+        destination: `${BACKEND_URL}/api/v1/auth/google/callback`,
+      },
+      {
         source: "/api/v1/:path*",
         destination: `${BACKEND_URL}/api/v1/:path*`,
       },
