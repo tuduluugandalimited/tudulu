@@ -1,3 +1,4 @@
+// D:\tudulu\apps\api\src\jobs\jobs.service.ts
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { CreateJobDto } from "./dto/create-job.dto";
@@ -137,12 +138,16 @@ export class JobsService {
     };
   }
 
-  async findOne(id: string, lang?: string) {
+  async findOne(identifier: string, lang?: string) {
     const now = new Date();
+    const isUuid =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        identifier,
+      );
 
     const job = await this.prisma.opportunity.findFirst({
       where: {
-        id,
+        [isUuid ? "id" : "slug"]: identifier,
         type: "JOB",
         status: "ACTIVE",
         deletedAt: null,
@@ -157,7 +162,7 @@ export class JobsService {
 
     if (!job) {
       throw new NotFoundException(
-        `Job opportunity with ID ${id} not found or expired`,
+        `Job opportunity with identifier ${identifier} not found or expired`,
       );
     }
 
