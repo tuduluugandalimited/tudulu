@@ -1,4 +1,3 @@
-// D:\tudulu\apps\web\next.config.js
 const path = require("path");
 
 const DEFAULT_BACKEND = "https://tudulu-api.onrender.com";
@@ -45,7 +44,7 @@ const nextConfig = {
       },
       {
         source: "/api/:path*",
-        destination: `${BACKEND_URL}/:path*`, // ← REMOVED /api/v1 HERE
+        destination: `${BACKEND_URL}/:path*`,
       },
     ];
   },
