@@ -1,5 +1,10 @@
 import Link from "next/link";
-import { Calendar, MapPin, Video, ArrowRight } from "lucide-react";
+import {
+  Calendar,
+  MapPin,
+  Video,
+  ArrowRight as ArrowRightIcon,
+} from "lucide-react";
 import { Container } from "@/components/ui/Container";
 
 interface Event {
@@ -108,7 +113,7 @@ export default async function EventsPage() {
                     href={`/events/${event.slug}`}
                     className="text-xs font-semibold text-emerald-800 hover:text-emerald-900 inline-flex items-center gap-1 transition-colors"
                   >
-                    Details <ArrowRight className="w-3.5 h-3.5" />
+                    Details <ArrowRightIcon className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
