@@ -57,8 +57,10 @@ export default function OrganizationDetailPage() {
   useEffect(() => {
     if (!id) return;
 
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-    fetch(`${apiUrl}/organizations/${id}`, {
+    // Use relative path to leverage the Next.js API proxy rewrite instead of hardcoding external backend URLs
+    const fetchUrl = `/api/organizations/${id}`;
+
+    fetch(fetchUrl, {
       headers: {
         Accept: "application/json",
       },
@@ -68,7 +70,7 @@ export default function OrganizationDetailPage() {
         if (!contentType || !contentType.includes("application/json")) {
           const text = await res.text();
           throw new Error(
-            `Received HTML instead of JSON from ${apiUrl}/organizations/${id}. Ensure NestJS backend is running on port 3001 and /organizations/:id route is active. Preview: ${text.substring(0, 80)}`,
+            `Received HTML instead of JSON from ${fetchUrl}. Ensure the API proxy route is active. Preview: ${text.substring(0, 80)}`,
           );
         }
         if (!res.ok)
