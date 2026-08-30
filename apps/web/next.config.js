@@ -44,7 +44,7 @@ const nextConfig = {
         destination: `${BACKEND_URL}/api/v1/news/:path*`,
       },
       {
-        source: "/api/v1/:path*",
+        source: "/api/:path*",
         destination: `${BACKEND_URL}/api/v1/:path*`,
       },
     ];
