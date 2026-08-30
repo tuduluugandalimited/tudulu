@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Calendar, MapPin, Video, ArrowRight } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 
+// Use the proxy route instead of direct API call
 async function getEvents() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/v1/events`,
+      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/events`, // Use /api/events
       {
         cache: "no-store",
       },
@@ -13,6 +14,7 @@ async function getEvents() {
     if (!res.ok) return [];
     return res.json();
   } catch (error) {
+    console.error("Failed to fetch events:", error);
     return [];
   }
 }

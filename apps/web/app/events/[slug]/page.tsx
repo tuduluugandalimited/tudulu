@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 async function getEvent(slug: string) {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/v1/events/${slug}`,
+      `${process.env.NEXT_PUBLIC_API_URL || ""}/api/events/${slug}`, // Use /api/events
       {
         cache: "no-store",
       },
