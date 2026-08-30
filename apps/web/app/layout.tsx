@@ -6,14 +6,14 @@ import "@/styles/globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-// Central config fallback with multiple GA IDs supported
+// Central config updated with your primary live GA Measurement ID
 const SITE_CONFIG = {
   name: "Tudulu",
   fullName: "Tudulu Uganda Limited",
   website: process.env.NEXT_PUBLIC_APP_URL || "https://tudulu.org",
   twitterHandle: "@TuduluL",
-  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "GTM-MCL2JTZC",
-  gaIds: [process.env.NEXT_PUBLIC_GA_ID || "G-6CH31J565R", "G-NSQL7NBP5E"],
+  gtmId: process.env.NEXT_PUBLIC_GTM_ID || "G-NSQL7NBP5E",
+  gaIds: [process.env.NEXT_PUBLIC_GA_ID || "G-95YKR372MZ"],
   adsenseId: process.env.NEXT_PUBLIC_ADSENSE_ID,
 };
 
@@ -84,7 +84,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        {/* Google Analytics 4 (gtag.js) for both accounts */}
+        {/* Google Analytics 4 (gtag.js) */}
         {primaryGaId && (
           <>
             <Script
