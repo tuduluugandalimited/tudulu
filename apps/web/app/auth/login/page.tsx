@@ -92,7 +92,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     // Relative endpoint through rewrite proxy or public oauth handler
-    window.location.href = "/auth/google";
+    window.location.href = "https://api.tudulu.org/api/v1/auth/google";
   };
 
   return (
