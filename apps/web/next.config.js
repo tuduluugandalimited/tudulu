@@ -32,8 +32,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/auth/:path*",
-        destination: `${BACKEND_URL}/api/v1/auth/:path*`,
+        source: "/auth/login",
+        destination: `${BACKEND_URL}/api/v1/auth/login`,
+      },
+      {
+        source: "/auth/register",
+        destination: `${BACKEND_URL}/api/v1/auth/register`,
       },
       {
         source: "/api/news/:path*",
@@ -43,7 +47,6 @@ const nextConfig = {
         source: "/api/v1/:path*",
         destination: `${BACKEND_URL}/api/v1/:path*`,
       },
-      // Removed the generic /api/:path* rewrite to stop double-prefixing /api/v1/api/v1/ errors
     ];
   },
 };
