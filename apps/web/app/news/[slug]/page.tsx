@@ -50,7 +50,7 @@ export default function NewsDetailPage() {
     setLoading(true);
     setError(null);
 
-    fetch(`/api/v1/news/${slug}`, {
+    fetch(`/api/news/${slug}`, {
       headers: {
         Accept: "application/json",
       },

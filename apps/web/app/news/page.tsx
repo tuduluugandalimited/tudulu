@@ -35,7 +35,7 @@ export default function NewsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    fetch("/api/v1/news", {
+    fetch("/api/news", {
       headers: {
         Accept: "application/json",
       },
