@@ -7,48 +7,36 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 
-interface Event {
-  id: string;
-  title: string;
-  slug: string;
-  description: string;
-  location: string | null;
-  isVirtual: boolean;
-  eventUrl: string | null;
-  startDate: string;
-  endDate: string | null;
-  type: string;
-  organizationId: string | null;
-  organization: {
-    id: string;
-    name: string;
-    slug: string;
-    logoUrl: string | null;
-  } | null;
-}
-
-async function getEvents(): Promise<Event[]> {
+// Simple version for debugging
+async function getEvents() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "";
-    const res = await fetch(`${baseUrl}/api/events`, {
-      cache: "no-store",
-    });
+    // Try both URLs to see which one works
+    const urls = ["/api/events", "https://api.tudulu.org/api/v1/events"];
 
-    if (!res.ok) {
-      console.error(`Failed to fetch events: ${res.status} ${res.statusText}`);
-      return [];
+    for (const url of urls) {
+      try {
+        console.log("Fetching from:", url);
+        const res = await fetch(url, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          console.log("Data from", url, ":", data);
+          return data;
+        }
+      } catch (e) {
+        console.error("Failed to fetch from", url, e);
+      }
     }
-
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    return [];
   } catch (error) {
-    console.error("Failed to fetch events:", error);
+    console.error("All fetch attempts failed:", error);
     return [];
   }
 }
 
 export default async function EventsPage() {
   const events = await getEvents();
+
+  console.log("Events in page:", events);
 
   return (
     <main className="min-h-screen py-12 bg-slate-50">
@@ -63,15 +51,18 @@ export default async function EventsPage() {
           </p>
         </div>
 
-        {events.length === 0 ? (
+        {!events || events.length === 0 ? (
           <div className="p-12 text-center bg-white border border-slate-200 rounded-2xl shadow-xs">
             <p className="text-slate-500 font-medium">
               No upcoming events found right now.
             </p>
+            <p className="text-xs text-slate-400 mt-2">
+              API response: {events ? "Empty array" : "No data"}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event) => (
+            {events.map((event: any) => (
               <div
                 key={event.id}
                 className="bg-white border border-slate-200 rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:shadow-md transition-all group"
