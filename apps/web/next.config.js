@@ -45,7 +45,7 @@ const nextConfig = {
       },
       {
         source: "/api/:path*",
-        destination: `${BACKEND_URL}/api/v1/:path*`,
+        destination: `${BACKEND_URL}/:path*`, // ← REMOVED /api/v1 HERE
       },
     ];
   },
