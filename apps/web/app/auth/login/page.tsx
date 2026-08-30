@@ -92,7 +92,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = () => {
     // Relative endpoint through rewrite proxy or public oauth handler
-    window.location.href = "/api/v1/auth/google";
+    window.location.href = "/auth/google";
   };
 
   return (
