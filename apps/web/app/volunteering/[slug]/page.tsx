@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -18,9 +20,8 @@ interface VolunteeringDetailPageProps {
 
 async function getVolunteeringDetail(slug: string) {
   try {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1";
-    const res = await fetch(`${apiUrl}/volunteering/${slug}`, {
+    // Use the proxy route - NO /api/v1
+    const res = await fetch(`/api/volunteering/${slug}`, {
       cache: "no-store",
     });
     if (!res.ok) return null;

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { Heart, MapPin, Calendar, Building2 } from "lucide-react";
 
@@ -19,9 +21,10 @@ interface VolunteeringItem {
 
 async function getVolunteeringOpportunities(): Promise<VolunteeringItem[]> {
   try {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1";
-    const res = await fetch(`${apiUrl}/volunteering`, { cache: "no-store" });
+    // Use the proxy route - NO /api/v1
+    const res = await fetch(`/api/volunteering`, {
+      cache: "no-store",
+    });
     if (!res.ok) return [];
     return res.json();
   } catch {
