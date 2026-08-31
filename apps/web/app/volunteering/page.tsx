@@ -5,6 +5,8 @@ import { Heart, MapPin, Calendar, Building2 } from "lucide-react";
 
 interface Organization {
   name: string;
+  id?: string;
+  logoUrl?: string;
 }
 
 interface VolunteeringItem {
@@ -21,19 +23,32 @@ interface VolunteeringItem {
 
 async function getVolunteeringOpportunities(): Promise<VolunteeringItem[]> {
   try {
-    // Use the proxy route - NO /api/v1
+    console.log("🔍 Fetching /api/volunteering...");
     const res = await fetch(`/api/volunteering`, {
       cache: "no-store",
     });
-    if (!res.ok) return [];
-    return res.json();
-  } catch {
+    console.log("📡 Response status:", res.status);
+    console.log("📡 Response ok?", res.ok);
+
+    if (!res.ok) {
+      console.log("❌ Response not OK:", res.status, res.statusText);
+      return [];
+    }
+
+    const data = await res.json();
+    console.log("✅ Data received:", data);
+    console.log("📊 Number of items:", data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error("❌ Error fetching volunteering:", error);
     return [];
   }
 }
 
 export default async function VolunteeringPage() {
   const opportunities = await getVolunteeringOpportunities();
+
+  console.log("📊 Opportunities in page:", opportunities?.length || 0);
 
   return (
     <div className="min-h-screen bg-[var(--td-bg-soft)] text-[var(--td-text)] py-12 px-4">
@@ -79,7 +94,9 @@ export default async function VolunteeringPage() {
                     )}
                   </div>
 
-                  <h3 className="text-lg font-bold">{item.title}</h3>
+                  <h3 className="text-lg font-bold line-clamp-2">
+                    {item.title}
+                  </h3>
 
                   <p className="text-xs text-[var(--td-text-muted)] line-clamp-3">
                     {item.description}
@@ -98,13 +115,6 @@ export default async function VolunteeringPage() {
                     <div className="flex items-center gap-2">
                       <MapPin className="w-3.5 h-3.5 text-[var(--td-color-primary)] shrink-0" />
                       <span className="truncate">{item.location}</span>
-                    </div>
-                  )}
-
-                  {item.deadline && (
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[var(--td-color-primary)] shrink-0" />
-                      <span>Deadline: {item.deadline}</span>
                     </div>
                   )}
 

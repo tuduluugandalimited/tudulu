@@ -9,8 +9,28 @@ import {
   ArrowLeft,
   CheckCircle2,
   Globe,
-  Clock,
 } from "lucide-react";
+
+interface Organization {
+  id: string;
+  name: string;
+  slug: string;
+  logoUrl: string | null;
+  email?: string;
+  website?: string;
+}
+
+interface VolunteeringDetail {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  commitment?: string;
+  isRemote?: boolean;
+  location?: string;
+  deadline?: string;
+  organization?: Organization;
+}
 
 interface VolunteeringDetailPageProps {
   params: Promise<{
@@ -18,15 +38,29 @@ interface VolunteeringDetailPageProps {
   }>;
 }
 
-async function getVolunteeringDetail(slug: string) {
+async function getVolunteeringDetail(
+  slug: string,
+): Promise<VolunteeringDetail | null> {
   try {
-    // Use the proxy route - NO /api/v1
+    console.log(`🔍 Fetching /api/volunteering/${slug}...`);
     const res = await fetch(`/api/volunteering/${slug}`, {
       cache: "no-store",
     });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
+    console.log("📡 Response status:", res.status);
+
+    if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+      console.log("❌ Response not OK:", res.status);
+      return null;
+    }
+
+    const data = await res.json();
+    console.log("✅ Data received:", data);
+    return data || null;
+  } catch (error) {
+    console.error("❌ Error fetching volunteering detail:", error);
     return null;
   }
 }
@@ -147,17 +181,6 @@ export default async function VolunteeringDetailPage({
               >
                 Apply for this Role
               </button>
-
-              {item.organization?.email && (
-                <div className="pt-4 border-t border-[var(--td-border-subtle)] text-xs space-y-1">
-                  <span className="text-[var(--td-text-muted)]">
-                    Direct Contact:
-                  </span>
-                  <p className="font-medium text-[var(--td-text)] break-all">
-                    {item.organization.email}
-                  </p>
-                </div>
-              )}
             </div>
           </div>
         </div>
