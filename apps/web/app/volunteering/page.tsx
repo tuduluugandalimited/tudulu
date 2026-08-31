@@ -23,21 +23,23 @@ interface VolunteeringItem {
 
 async function getVolunteeringOpportunities(): Promise<VolunteeringItem[]> {
   try {
-    console.log("🔍 Fetching /api/volunteering...");
-    const res = await fetch(`/api/volunteering`, {
+    // Try direct backend URL to bypass proxy
+    console.log("🔍 Fetching from backend directly...");
+    const res = await fetch(`https://api.tudulu.org/api/v1/volunteering`, {
       cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     console.log("📡 Response status:", res.status);
-    console.log("📡 Response ok?", res.ok);
 
     if (!res.ok) {
-      console.log("❌ Response not OK:", res.status, res.statusText);
+      console.log("❌ Response not OK:", res.status);
       return [];
     }
 
     const data = await res.json();
-    console.log("✅ Data received:", data);
-    console.log("📊 Number of items:", data?.length || 0);
+    console.log("✅ Data received:", data?.length || 0, "items");
     return data || [];
   } catch (error) {
     console.error("❌ Error fetching volunteering:", error);

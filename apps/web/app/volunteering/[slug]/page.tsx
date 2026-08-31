@@ -42,10 +42,17 @@ async function getVolunteeringDetail(
   slug: string,
 ): Promise<VolunteeringDetail | null> {
   try {
-    console.log(`🔍 Fetching /api/volunteering/${slug}...`);
-    const res = await fetch(`/api/volunteering/${slug}`, {
-      cache: "no-store",
-    });
+    // Use direct backend URL to bypass proxy
+    console.log(`🔍 Fetching from backend directly: ${slug}...`);
+    const res = await fetch(
+      `https://api.tudulu.org/api/v1/volunteering/${slug}`,
+      {
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
     console.log("📡 Response status:", res.status);
 
     if (!res.ok) {
