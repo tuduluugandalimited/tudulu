@@ -54,7 +54,7 @@ export default function JobSlugDetailPage() {
   useEffect(() => {
     if (!slug) return;
 
-    fetch(`/api/opportunities/${slug}`, {
+    fetch(`/api/jobs/${slug}`, {
       headers: {
         Accept: "application/json",
       },

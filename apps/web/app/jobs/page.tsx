@@ -49,7 +49,7 @@ export default function JobsDirectoryPage() {
 
   useEffect(() => {
     // CHANGE THIS: Use /api/opportunities to get ALL opportunities
-    const fetchUrl = "/api/opportunities";
+    const fetchUrl = "/api/jobs";
 
     fetch(fetchUrl, {
       headers: {
